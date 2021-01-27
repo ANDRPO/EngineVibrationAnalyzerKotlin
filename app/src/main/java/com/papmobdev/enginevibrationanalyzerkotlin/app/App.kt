@@ -1,6 +1,7 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.app
 
 import android.app.Application
+import com.papmobdev.enginevibrationanalyzerkotlin.app.koin.KoinModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -13,7 +14,7 @@ class App : Application(){
     private fun initKoin(){
         startKoin{
             androidContext(this@App)
-            //init modules
+            modules(KoinModules.all)
         }
     }
 
