@@ -27,4 +27,6 @@
     <color name="colorRMSZ">#FF00C7</color>
 
     <color name="invisible">#00FFFFFF</color>
+
+    <color name="white_text">#E6FFFFFF</color>
 </resources>

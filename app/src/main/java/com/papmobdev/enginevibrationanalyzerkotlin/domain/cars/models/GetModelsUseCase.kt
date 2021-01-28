@@ -1,0 +1,9 @@
+package com.papmobdev.enginevibrationanalyzerkotlin.domain.cars.models
+
+import com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarMarkEntity
+import com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarModelEntity
+import com.papmobdev.enginevibrationanalyzerkotlin.domain.FlowUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
+@ExperimentalCoroutinesApi
+interface GetModelsUseCase : FlowUseCase<CarMarkEntity, List<CarModelEntity>>

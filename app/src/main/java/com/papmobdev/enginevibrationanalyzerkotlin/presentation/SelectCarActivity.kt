@@ -16,5 +16,6 @@ class SelectCarActivity : BaseActivity() {
             lifecycleOwner = this@SelectCarActivity
             viewModel = this@SelectCarActivity.vviewModel
         }
+        
     }
 }
