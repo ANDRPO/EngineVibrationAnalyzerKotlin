@@ -19,4 +19,5 @@ interface FlowUseCaseOut<R> {
     }
 
     operator fun invoke(): Flow<Result<R>> = execute().handleOn()
+
 }

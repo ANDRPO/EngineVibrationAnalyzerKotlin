@@ -12,9 +12,9 @@ class GetModelsUseCaseImpl(
         private val carsDataSource: CarsDataSource
 ) : GetModelsUseCase {
     override fun execute(param: CarMarkEntity): Flow<Result<List<CarModelEntity>>> = flow {
-        val modelsData = param.idCarMark?.let {
+        val modelsData = param.idCarMark.let {
             carsDataSource.getModels(it)
-        }!!
+        }
         emit(Result.success(modelsData))
     }
 }

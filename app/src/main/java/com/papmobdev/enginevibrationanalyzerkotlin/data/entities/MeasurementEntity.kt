@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Measurement_entity", foreignKeys = [
+@Entity(tableName = "measurement_entity", foreignKeys = [
     ForeignKey(
             entity = MeasurementEntity::class,
-            childColumns = arrayOf("fK_test"),
+            childColumns = arrayOf("fk_test"),
             parentColumns = arrayOf("id_measurement"),
             onDelete = ForeignKey.SET_NULL)])
 

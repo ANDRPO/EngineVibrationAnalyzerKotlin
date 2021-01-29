@@ -16,6 +16,10 @@ data class TestEntityJoinedCar(
 
         @ColumnInfo(name = "model_name") var modelName: String? = "",
 
-        @ColumnInfo(name = "generation_name") var generationName: String? = ""
+        @ColumnInfo(name = "generation_name") var generationName: String? = "",
+
+        @ColumnInfo(name = "date", defaultValue = "CURRENT_DATE") var date: String?,
+
+        @ColumnInfo(name = "time", defaultValue = "CURRENT_TIME") var time: String?
 
 )

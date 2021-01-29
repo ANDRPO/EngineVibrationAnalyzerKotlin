@@ -2,4 +2,5 @@
 <resources>
     <dimen name="primaryText">20sp</dimen>
     <dimen name="marginHorizontalActivitySelectCarsOptions">14dp</dimen>
+    <dimen name="secondaryText">18sp</dimen>
 </resources>
