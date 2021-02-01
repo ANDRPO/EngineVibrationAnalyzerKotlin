@@ -10,20 +10,17 @@
             type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar.SelectCarViewModel" />
 
         <variable
-            name="typeOptionCars"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar.TypeOptionCars" />
-
-        <variable
             name="ObjCarMark"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarMarkEntity" />
+            type="com.papmobdev.domain.cars.models.BaseCarOption" />
 
         <variable
             name="ObjCarModel"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarModelEntity" />
+            type="com.papmobdev.domain.cars.models.BaseCarOption" />
 
         <variable
             name="ObjCarGeneration"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarGenerationEntity" />
+            type="com.papmobdev.domain.cars.models.BaseCarOption" />
+
 
     </data>
 
@@ -67,7 +64,7 @@
             android:layout_height="54dp"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
-            android:text="Выбрать модель"
+            android:text="@{viewModel.liveDataModel.name != null ? viewModel.liveDataModel.name : `Выбрать модель`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
             android:textStyle="bold"
@@ -82,7 +79,7 @@
             android:layout_height="54dp"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
-            android:text="Выбрать поколнение"
+            android:text="@{viewModel.liveDataGeneration.name != null ? viewModel.liveDataGeneration.name : `Выбрать поколение`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
             android:textStyle="bold"
@@ -92,15 +89,28 @@
             app:layout_constraintTop_toBottomOf="@+id/selectModelCar" />
 
         <EditText
-            android:id="@+id/textViewInputNote"
+            android:id="@+id/editTextEngineVolume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
-            android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:layout_marginTop="28dp"
+            android:hint="Объём"
+            android:inputType="numberDecimal"
+            android:maxLength="3"
+            app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar"
+            tools:layout_editor_absoluteX="-21dp" />
+
+        <EditText
+            android:id="@+id/editTextInputNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:layout_marginTop="43dp"
             android:hint="Заметка"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.428"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextEngineVolume" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

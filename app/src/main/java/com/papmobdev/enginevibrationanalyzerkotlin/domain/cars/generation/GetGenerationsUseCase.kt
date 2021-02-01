@@ -1,9 +1,0 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.domain.cars.generation
-
-import com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarGenerationEntity
-import com.papmobdev.enginevibrationanalyzerkotlin.data.entities.CarModelEntity
-import com.papmobdev.enginevibrationanalyzerkotlin.domain.FlowUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-
-@ExperimentalCoroutinesApi
-interface GetGenerationsUseCase : FlowUseCase<CarModelEntity, List<CarGenerationEntity>>

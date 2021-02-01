@@ -1,8 +1,0 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.domain.tests
-
-import com.papmobdev.enginevibrationanalyzerkotlin.data.entities.TestEntity
-import com.papmobdev.enginevibrationanalyzerkotlin.domain.FlowUseCaseOut
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-
-@ExperimentalCoroutinesApi
-interface GetTestsUseCase : FlowUseCaseOut<List<TestEntity>>
