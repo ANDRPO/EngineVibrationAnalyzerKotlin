@@ -31,7 +31,8 @@ interface AppDataBaseDao {
     @Query("SELECT * FROM car_generation WHERE fk_car_model = :idCarModel")
     fun getCarGeneration(idCarModel: Int): List<CarGenerationEntity>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             test_entity.id_test as 'id_test', 
             test_entity.car_registration_plate as 'car_registration_plate',
@@ -46,7 +47,8 @@ interface AppDataBaseDao {
             LEFT JOIN car_model 
             ON car_model.id_car_model = fk_model
             LEFT JOIN car_generation 
-            ON car_generation.id_car_generation = fk_generation""")
+            ON car_generation.id_car_generation = fk_generation"""
+    )
 
     fun getTests(): Flow<List<TestEntityJoinedCar>>
 

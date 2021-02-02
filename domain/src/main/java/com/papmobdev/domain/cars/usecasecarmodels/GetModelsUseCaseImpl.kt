@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.flow
 
 @ExperimentalCoroutinesApi
 class GetModelsUseCaseImpl(
-        private val carsDataSource: CarsDataSource
+    private val carsDataSource: CarsDataSource
 ) : GetModelsUseCase {
-    override fun execute(param: CarMark): Flow<Result<List<CarModel>>> = flow {
-        val modelsData = param.id.let {
+    override fun execute(param: Int): Flow<Result<List<CarModel>>> = flow {
+        val modelsData = param.let {
             carsDataSource.getModels(it)
         }
         emit(Result.success(modelsData))

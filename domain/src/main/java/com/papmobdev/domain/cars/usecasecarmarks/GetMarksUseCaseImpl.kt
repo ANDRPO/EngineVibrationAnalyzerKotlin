@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 
 @ExperimentalCoroutinesApi
 class GetMarksUseCaseImpl(
-        private val carsDataSource: CarsDataSource
+    private val carsDataSource: CarsDataSource
 ) : GetMarksUseCase {
     override fun execute(): Flow<Result<List<CarMark>>> = flow {
         val marksData = carsDataSource.getMarks()

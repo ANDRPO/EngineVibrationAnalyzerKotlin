@@ -6,4 +6,4 @@ import com.papmobdev.domain.cars.models.CarModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-interface GetGenerationsUseCase : FlowUseCase<CarModel, List<CarGeneration>>
+interface GetGenerationsUseCase : FlowUseCase<Int, List<CarGeneration>>

@@ -5,7 +5,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class GetTestsUseCaseImpl: GetTestsUseCase {
+class GetTestsUseCaseImpl : GetTestsUseCase {
     override fun execute(): Flow<Result<List<TestModel>>> {
         TODO("Not yet implemented")
     }

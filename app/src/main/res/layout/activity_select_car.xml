@@ -11,15 +11,15 @@
 
         <variable
             name="ObjCarMark"
-            type="com.papmobdev.domain.cars.models.BaseCarOption" />
+            type="com.papmobdev.domain.cars.models.CarMark" />
 
         <variable
             name="ObjCarModel"
-            type="com.papmobdev.domain.cars.models.BaseCarOption" />
+            type="com.papmobdev.domain.cars.models.CarModel" />
 
         <variable
             name="ObjCarGeneration"
-            type="com.papmobdev.domain.cars.models.BaseCarOption" />
+            type="com.papmobdev.domain.cars.models.CarGeneration" />
 
 
     </data>
@@ -46,9 +46,10 @@
         <Button
             android:id="@+id/selectMarkCar"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="28dp"
+            android:paddingVertical="10dp"
             android:text="@{viewModel.liveDataMark.name != null ? viewModel.liveDataMark.name : `Выбрать марку`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
@@ -61,9 +62,10 @@
         <Button
             android:id="@+id/selectModelCar"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:paddingVertical="10dp"
             android:text="@{viewModel.liveDataModel.name != null ? viewModel.liveDataModel.name : `Выбрать модель`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
@@ -76,9 +78,10 @@
         <Button
             android:id="@+id/selectGenerationCar"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:paddingVertical="10dp"
             android:text="@{viewModel.liveDataGeneration.name != null ? viewModel.liveDataGeneration.name : `Выбрать поколение`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
@@ -88,17 +91,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectModelCar" />
 
+        <Spinner
+            android:id="@+id/spinnerDieselOrPetrol"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
+            app:layout_constraintBottom_toTopOf="@+id/editTextEngineVolume"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar" />
+
+
         <EditText
             android:id="@+id/editTextEngineVolume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="124dp"
             android:hint="Объём"
             android:inputType="numberDecimal"
             android:maxLength="3"
+            android:paddingVertical="10dp"
             app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar"
-            tools:layout_editor_absoluteX="-21dp" />
+            tools:layout_editor_absoluteX="37dp" />
 
         <EditText
             android:id="@+id/editTextInputNote"

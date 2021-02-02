@@ -1,9 +1,10 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
+import com.papmobdev.domain.cars.CodeOptionsCar
+import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
+import com.papmobdev.domain.cars.models.CarModel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
@@ -14,11 +15,15 @@ class CarParameterListViewModel(
     private val getMarksUseCase: GetMarksUseCase,
     private val getModelsUseCase: GetModelsUseCase,
     private val getGenerationsUseCase: GetGenerationsUseCase
-) : ViewModel(){
+) : ViewModel() {
 
-    var listOptions: LiveData<Result<List<CarMark>>> = getMark()
+    fun getMarks(): LiveData<Result<List<CarMark>>> = getMarksUseCase()
+        .asLiveData()
 
-    fun getMark(): LiveData<Result<List<CarMark>>> = getMarksUseCase()
+    fun getModels(id: Int): LiveData<Result<List<CarModel>>> = getModelsUseCase(id)
+        .asLiveData()
+
+    fun getGenerations(id: Int): LiveData<Result<List<CarGeneration>>> = getGenerationsUseCase(id)
         .asLiveData()
 
 }

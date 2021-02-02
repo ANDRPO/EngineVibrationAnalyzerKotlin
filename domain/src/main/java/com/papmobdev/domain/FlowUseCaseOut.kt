@@ -14,8 +14,8 @@ interface FlowUseCaseOut<R> {
 
     fun <T> Flow<Result<T>>.handleOn(dispatcher: CoroutineDispatcher = Dispatchers.IO): Flow<Result<T>> {
         return this
-                .catch { e -> emit(Result.failure(Exception(e))) }
-                .flowOn(dispatcher)
+            .catch { e -> emit(Result.failure(Exception(e))) }
+            .flowOn(dispatcher)
     }
 
     operator fun invoke(): Flow<Result<R>> = execute().handleOn()
