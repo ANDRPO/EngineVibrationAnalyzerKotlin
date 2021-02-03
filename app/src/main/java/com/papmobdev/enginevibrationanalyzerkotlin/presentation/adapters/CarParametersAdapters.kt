@@ -1,6 +1,5 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +7,7 @@ import com.papmobdev.domain.cars.models.BaseCarOption
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBinding
 import java.util.*
 
+@Suppress("NAME_SHADOWING")
 class CarParametersAdapters<T : BaseCarOption>(
     private val items: MutableList<T>,
     private val onItemClickListener: OnItemClickListener
@@ -43,7 +43,6 @@ class CarParametersAdapters<T : BaseCarOption>(
             for (str in itemsCopy) {
                 if (str.name.toLowerCase(Locale.getDefault()).contains(paramFilter)) {
                     items.add(str)
-                    Log.e("NameCar", str.name)
                 }
             }
         }

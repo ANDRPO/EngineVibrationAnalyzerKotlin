@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -12,7 +11,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.get
 import androidx.lifecycle.Observer
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
@@ -71,7 +69,6 @@ class SelectCarActivity : BaseActivity() {
                 id: Long
             ) {
                 viewModel.selectOptionFuel = listFuel[position]
-                Log.e("SELECTFUEL", listFuel[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -80,13 +77,13 @@ class SelectCarActivity : BaseActivity() {
     }
 
     private fun initObservers() {
-        viewModel.liveDataMark.observe(this@SelectCarActivity, Observer {
+        viewModel.liveDataMark.observe(this@SelectCarActivity, {
             binding.objCarMark = it
         })
-        viewModel.liveDataModel.observe(this@SelectCarActivity, Observer {
+        viewModel.liveDataModel.observe(this@SelectCarActivity, {
             binding.objCarModel = it
         })
-        viewModel.liveDataGeneration.observe(this@SelectCarActivity, Observer {
+        viewModel.liveDataGeneration.observe(this@SelectCarActivity, {
             binding.objCarGeneration = it
         })
     }
