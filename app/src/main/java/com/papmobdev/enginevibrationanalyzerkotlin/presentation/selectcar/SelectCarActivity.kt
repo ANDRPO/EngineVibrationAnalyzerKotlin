@@ -71,8 +71,7 @@ class SelectCarActivity : BaseActivity() {
                 viewModel.selectOptionFuel = listFuel[position]
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 

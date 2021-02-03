@@ -4,6 +4,7 @@ import android.database.DataSetObservable
 import android.database.DataSetObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.papmobdev.domain.cars.models.BaseCarOption
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
@@ -15,6 +16,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.time.Duration
+import kotlin.coroutines.coroutineContext
 
 @ExperimentalCoroutinesApi
 class SelectCarViewModel(
@@ -34,18 +37,14 @@ class SelectCarViewModel(
     fun <T : BaseCarOption> postDataOption(baseCarOption: T?, nextOptionIsNull: Boolean) {
         when (baseCarOption) {
             is CarMark -> {
-                GlobalScope.launch(Dispatchers.IO) {
-                    checkNextOptionsListIsNotNull(baseCarOption)
-                }.start()
+                checkNextOptionsListIsNotNull(baseCarOption)
                 nextModelIsNotNull = nextOptionIsNull
                 liveDataMark.value = baseCarOption
                 liveDataModel.value = null
                 liveDataGeneration.value = null
             }
             is CarModel -> {
-                GlobalScope.launch(Dispatchers.IO) {
-                    checkNextOptionsListIsNotNull(baseCarOption)
-                }.start()
+                checkNextOptionsListIsNotNull(baseCarOption)
                 nextGenerationIsNotNull = nextOptionIsNull
                 liveDataModel.value = baseCarOption
                 liveDataGeneration.value = null
@@ -53,16 +52,16 @@ class SelectCarViewModel(
             is CarGeneration -> {
                 liveDataGeneration.value = baseCarOption
             }
-
         }
     }
 
-    private suspend fun <T : BaseCarOption> checkNextOptionsListIsNotNull(carOption: T) {
+
+    private fun <T : BaseCarOption> checkNextOptionsListIsNotNull(carOption: T) {
         when (carOption) {
-            is CarMark -> getModelsUseCase.execute(carOption.id).collect {
+            is CarMark -> getModelsUseCase(carOption.id).asLiveData().observeForever {
                 nextModelIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
             }
-            is CarModel -> getGenerationsUseCase(carOption.id).collect {
+            is CarModel -> getGenerationsUseCase(carOption.id).asLiveData().observeForever {
                 nextGenerationIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
             }
         }
