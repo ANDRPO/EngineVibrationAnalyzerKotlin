@@ -3,9 +3,9 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.papmobdev.domain.cars.CodeContractSelectCar
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.BaseCarOption
 import com.papmobdev.enginevibrationanalyzerkotlin.R
@@ -15,7 +15,6 @@ import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OnItemC
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 @ExperimentalCoroutinesApi
 class CarParameterListActivity : BaseActivity(), OnItemClickListener {
@@ -58,7 +57,8 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
 
     private fun createListOptions(list: List<BaseCarOption>) {
         binding.apply {
-            val carParametersAdapters = CarParametersAdapters(list, this@CarParameterListActivity)
+            val carParametersAdapters =
+                CarParametersAdapters(list.toMutableList(), this@CarParameterListActivity)
             recyclerViewCarParameter.addItemDecoration(
                 DividerItemDecoration(
                     recyclerViewCarParameter.context,
@@ -66,6 +66,10 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
                 )
             )
             recyclerViewCarParameter.adapter = carParametersAdapters
+            binding.searchCarList.addTextChangedListener(onTextChanged = { text, _, _, _ ->
+                carParametersAdapters.filterSearch(text.toString())
+            }).also { carParametersAdapters.filterSearch(binding.searchCarList.text.toString()) }
+
         }
     }
 

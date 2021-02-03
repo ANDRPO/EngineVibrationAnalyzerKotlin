@@ -1,4 +1,4 @@
-package com.papmobdev.domain.cars
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
 object CodeContractSelectCar {
     const val CODE_OPTIONS_CAR = "1"

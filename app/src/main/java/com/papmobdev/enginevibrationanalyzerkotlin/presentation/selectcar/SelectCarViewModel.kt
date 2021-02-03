@@ -1,17 +1,14 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
+import android.database.DataSetObservable
+import android.database.DataSetObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import com.papmobdev.data.entities.CarGenerationEntity
-import com.papmobdev.data.entities.CarMarkEntity
-import com.papmobdev.data.entities.CarModelEntity
 import com.papmobdev.domain.cars.models.BaseCarOption
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.CarModel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
-import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,11 +29,13 @@ class SelectCarViewModel(
     var nextModelIsNotNull: Boolean = true
     var nextGenerationIsNotNull: Boolean = true
 
+    var selectOptionFuel: String? = null
+
     fun <T : BaseCarOption> postDataOption(baseCarOption: T?, nextOptionIsNull: Boolean) {
         when (baseCarOption) {
             is CarMark -> {
                 GlobalScope.launch(Dispatchers.IO) {
-                    checkNextOptionIsNotNull(baseCarOption)
+                    checkNextOptionsListIsNotNull(baseCarOption)
                 }.start()
                 nextModelIsNotNull = nextOptionIsNull
                 liveDataMark.value = baseCarOption
@@ -45,7 +44,7 @@ class SelectCarViewModel(
             }
             is CarModel -> {
                 GlobalScope.launch(Dispatchers.IO) {
-                    checkNextOptionIsNotNull(baseCarOption)
+                    checkNextOptionsListIsNotNull(baseCarOption)
                 }.start()
                 nextGenerationIsNotNull = nextOptionIsNull
                 liveDataModel.value = baseCarOption
@@ -58,7 +57,7 @@ class SelectCarViewModel(
         }
     }
 
-    private suspend fun <T : BaseCarOption> checkNextOptionIsNotNull(carOption: T) {
+    private suspend fun <T : BaseCarOption> checkNextOptionsListIsNotNull(carOption: T) {
         when (carOption) {
             is CarMark -> getModelsUseCase.execute(carOption.id).collect {
                 nextModelIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
@@ -68,6 +67,4 @@ class SelectCarViewModel(
             }
         }
     }
-
-
 }

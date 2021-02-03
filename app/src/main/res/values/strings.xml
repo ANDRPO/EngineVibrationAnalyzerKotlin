@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Engine Vibration Analyzer</string>
     <string name="textSelectCarsOptions">Укажите параметры транспортного средства:</string>
+    <string name="search">Поиск</string>
 </resources>
