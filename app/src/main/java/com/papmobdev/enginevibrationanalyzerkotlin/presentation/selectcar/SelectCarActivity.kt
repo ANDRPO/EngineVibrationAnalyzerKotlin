@@ -43,7 +43,6 @@ class SelectCarActivity : BaseActivity() {
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = binding<ActivitySelectCarBinding>(R.layout.activity_select_car).value.apply {
             lifecycleOwner = this@SelectCarActivity
             viewModel = this@SelectCarActivity.viewModel
@@ -104,18 +103,18 @@ class SelectCarActivity : BaseActivity() {
     }
 
     private fun modelCheckSelection(): Boolean {
-        when (false) {
-            binding.objCarMark != null -> showToastNotLastSelect("Не выбрана марка")
-            viewModel.nextModelIsNotNull -> showToastNotLastSelect("Список моделей для данной марки отсутствует")
+        when {
+            binding.objCarMark == null -> showToastNotLastSelect("Не выбрана марка")
+            !viewModel.nextModelIsNotNull -> showToastNotLastSelect("Список моделей для данной марки отсутствует")
             else -> return true
         }
         return false
     }
 
     private fun generationCheckSelection(): Boolean {
-        when (false) {
-            binding.objCarModel != null -> showToastNotLastSelect("Не выбрана модель")
-            viewModel.nextGenerationIsNotNull -> showToastNotLastSelect("Список поколений для данной модели отсутствует")
+        when {
+            binding.objCarModel == null -> showToastNotLastSelect("Не выбрана модель")
+            !viewModel.nextGenerationIsNotNull -> showToastNotLastSelect("Список поколений для данной модели отсутствует")
             else -> return true
         }
         return false

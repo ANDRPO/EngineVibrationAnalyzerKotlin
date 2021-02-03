@@ -18,5 +18,6 @@
         <item name="fontFamily">@font/lato</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:textAppearanceButton">?attr/textAppearanceHeadline6</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
     </style>
 </resources>

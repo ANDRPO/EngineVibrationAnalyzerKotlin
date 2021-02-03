@@ -2,6 +2,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
 import android.database.DataSetObservable
 import android.database.DataSetObserver
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -34,6 +35,7 @@ class SelectCarViewModel(
 
     var selectOptionFuel: String? = null
 
+
     fun <T : BaseCarOption> postDataOption(baseCarOption: T?, nextOptionIsNull: Boolean) {
         when (baseCarOption) {
             is CarMark -> {
@@ -54,7 +56,6 @@ class SelectCarViewModel(
             }
         }
     }
-
 
     private fun <T : BaseCarOption> checkNextOptionsListIsNotNull(carOption: T) {
         when (carOption) {

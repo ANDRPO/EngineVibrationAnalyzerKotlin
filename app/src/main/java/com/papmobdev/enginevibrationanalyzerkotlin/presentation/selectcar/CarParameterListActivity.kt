@@ -1,5 +1,6 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -38,23 +39,24 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
     }
 
     private fun getMark() {
-        this.viewModel.getMarks().observe(this@CarParameterListActivity, Observer {
+        this.viewModel.getMarks().observe(this@CarParameterListActivity, {
             createListOptions(it.getOrNull()!!)
         })
     }
 
     private fun getModel() {
-        this.viewModel.getModels(getIdOption()).observe(this, Observer {
+        this.viewModel.getModels(getIdOption()).observe(this, {
             createListOptions(it.getOrNull()!!)
         })
     }
 
     private fun getGeneration() {
-        this.viewModel.getGenerations(getIdOption()).observe(this, Observer {
+        this.viewModel.getGenerations(getIdOption()).observe(this, {
             createListOptions(it.getOrNull()!!)
         })
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun createListOptions(list: List<BaseCarOption>) {
         binding.apply {
             val carParametersAdapters =
@@ -63,7 +65,9 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
                 DividerItemDecoration(
                     recyclerViewCarParameter.context,
                     DividerItemDecoration.VERTICAL
-                )
+                ).apply {
+                        setDrawable(resources.getDrawable((R.drawable.drawable_divider_item_decoration), theme))
+                }
             )
             recyclerViewCarParameter.adapter = carParametersAdapters
             binding.searchCarList.addTextChangedListener(onTextChanged = { text, _, _, _ ->
