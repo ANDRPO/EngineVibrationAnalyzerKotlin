@@ -2,6 +2,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -31,11 +32,10 @@ class SelectCarActivity : BaseActivity() {
 
     private val resultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-                val data: Intent = result.data!!
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
                 viewModel.postDataOption(
-                    data.getParcelableExtra(CodeContractSelectCar.OBJ_OPTION),
-                    data.getBooleanExtra(CodeContractSelectCar.NEXT_OPTION_IS_NULL, false)
+
                 )
             }
         }
@@ -75,15 +75,17 @@ class SelectCarActivity : BaseActivity() {
     }
 
     private fun initObservers() {
-        viewModel.liveDataMark.observe(this@SelectCarActivity, {
-            binding.objCarMark = it
-        })
-        viewModel.liveDataModel.observe(this@SelectCarActivity, {
-            binding.objCarModel = it
-        })
-        viewModel.liveDataGeneration.observe(this@SelectCarActivity, {
-            binding.objCarGeneration = it
-        })
+        viewModel.apply {
+            liveDataMark.observe(this@SelectCarActivity, {
+                binding.objCarMark = it
+            })
+            liveDataModel.observe(this@SelectCarActivity, {
+                binding.objCarModel = it
+            })
+            liveDataGeneration.observe(this@SelectCarActivity, {
+                binding.objCarGeneration = it
+            })
+        }
     }
 
     private fun initClickListeners() {

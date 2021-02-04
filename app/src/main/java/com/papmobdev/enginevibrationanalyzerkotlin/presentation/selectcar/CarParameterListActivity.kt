@@ -1,17 +1,12 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.papmobdev.domain.cars.CodeOptionsCar
-import com.papmobdev.domain.cars.models.BaseCarOption
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityCarParameterListBinding
-import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.CarParametersAdapters
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OnItemClickListener
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,70 +18,39 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
     private lateinit var binding: ActivityCarParameterListBinding
     private val viewModel: CarParameterListViewModel by viewModel()
 
+    companion object {
+        private const val KEY_TYPE_CAR_OPTION = "key_type_car_option"
+
+        fun start(context: Context, valueTypeOption: String) {
+            context.startActivity(
+                Intent(context, CarParameterListActivity::class.java).apply {
+                    putExtra(KEY_TYPE_CAR_OPTION, valueTypeOption)
+                }
+            )
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding =
             binding<ActivityCarParameterListBinding>(R.layout.activity_car_parameter_list).value.apply {
                 lifecycleOwner = this@CarParameterListActivity
-                viewModel = this@CarParameterListActivity.viewModel.apply {
-                    when (getCarType()) {
-                        CodeOptionsCar.MARK -> this@CarParameterListActivity.getMark()
-                        CodeOptionsCar.MODEL -> this@CarParameterListActivity.getModel()
-                        CodeOptionsCar.GENERATION -> this@CarParameterListActivity.getGeneration()
-                    }
-                }
+                viewModel = this@CarParameterListActivity.viewModel
             }
     }
 
-    private fun getMark() {
-        this.viewModel.getMarks().observe(this@CarParameterListActivity, {
-            createListOptions(it.getOrNull()!!)
-        })
-    }
-
-    private fun getModel() {
-        this.viewModel.getModels(getIdOption()).observe(this, {
-            createListOptions(it.getOrNull()!!)
-        })
-    }
-
-    private fun getGeneration() {
-        this.viewModel.getGenerations(getIdOption()).observe(this, {
-            createListOptions(it.getOrNull()!!)
-        })
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun createListOptions(list: List<BaseCarOption>) {
-        binding.apply {
-            val carParametersAdapters =
-                CarParametersAdapters(list.toMutableList(), this@CarParameterListActivity)
-            recyclerViewCarParameter.addItemDecoration(
-                DividerItemDecoration(
-                    recyclerViewCarParameter.context,
-                    DividerItemDecoration.VERTICAL
-                ).apply {
-                        setDrawable(resources.getDrawable((R.drawable.drawable_divider_item_decoration), theme))
-                }
-            )
-            recyclerViewCarParameter.adapter = carParametersAdapters
-            binding.searchCarList.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-                carParametersAdapters.filterSearch(text.toString())
-            }).also { carParametersAdapters.filterSearch(binding.searchCarList.text.toString()) }
-
-        }
-    }
-
-    override fun <T : BaseCarOption> onClick(baseCarOption: T) {
+    override fun <T> onClick(baseCarOption: T) {
         val intent = Intent()
-        intent.putExtra(CodeContractSelectCar.OBJ_OPTION, baseCarOption)
+
+        intent.putExtra(,)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
 
-    private fun getCarType(): Int =
-        this.intent.getIntExtra(CodeContractSelectCar.CODE_OPTIONS_CAR, 1)
+    private fun getCarType(): CodeOptionsCar =
+        this.intent.getParcelableExtra()
 
-    private fun getIdOption(): Int = this.intent.getIntExtra(CodeContractSelectCar.ID, 0)
+    private fun getIdOption(): Int = this.intent.getIntExtra()
 
 }

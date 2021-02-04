@@ -2,18 +2,19 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.papmobdev.domain.cars.models.BaseCarOption
+import com.papmobdev.domain.cars.models.CarGeneration
+import com.papmobdev.domain.cars.models.CarMark
+import com.papmobdev.domain.cars.models.CarModel
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBinding
 import java.util.*
 
 @Suppress("NAME_SHADOWING")
-class CarParametersAdapters<T : BaseCarOption>(
+class CarParametersAdapters<T>(
     private val items: MutableList<T>,
     private val onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<CarParametersAdapters<T>.ViewHolder>() {
-
-    private val itemsCopy = items.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -28,24 +29,15 @@ class CarParametersAdapters<T : BaseCarOption>(
     inner class ViewHolder(private val binding: ItemParamCarBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: T) {
-            binding.carOption = item
-            binding.rootItem.setOnClickListener { onItemClickListener.onClick(item) }
-            binding.executePendingBindings()
-        }
-    }
-
-    fun filterSearch(paramFilter: String) {
-        val paramFilter = paramFilter.toLowerCase(Locale.getDefault())
-        items.clear()
-        if (paramFilter.isEmpty()) {
-            items.addAll(itemsCopy)
-        } else {
-            for (str in itemsCopy) {
-                if (str.name.toLowerCase(Locale.getDefault()).contains(paramFilter)) {
-                    items.add(str)
+            binding.apply {
+                when (item) {
+                    is CarMark -> name = item.name
+                    is CarModel -> name = item.name
+                    is CarGeneration -> name = item.name
                 }
+                rootItem.setOnClickListener { onItemClickListener.onClick(item) }
+                binding.executePendingBindings()
             }
         }
-        notifyDataSetChanged()
     }
 }
