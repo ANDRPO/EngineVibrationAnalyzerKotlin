@@ -18,6 +18,6 @@ interface FlowUseCase<in P, R> {
             .flowOn(dispatcher)
     }
 
-    operator fun invoke(param: P): Flow<Result<R>> = execute(param).handleOn()
+    operator fun invoke(param: Int?): Flow<Result<R>> = execute(param).handleOn()
 
 }

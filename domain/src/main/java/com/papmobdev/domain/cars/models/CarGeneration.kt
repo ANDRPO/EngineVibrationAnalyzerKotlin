@@ -1,6 +1,6 @@
 package com.papmobdev.domain.cars.models
 
 data class CarGeneration(
-    var id: Int,
-    var name: String
+    val id: Int,
+    val name: String
 )

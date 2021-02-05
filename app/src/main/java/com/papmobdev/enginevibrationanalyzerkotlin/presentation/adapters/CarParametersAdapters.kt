@@ -10,9 +10,8 @@ import com.papmobdev.domain.cars.models.CarModel
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBinding
 import java.util.*
 
-@Suppress("NAME_SHADOWING")
 class CarParametersAdapters<T>(
-    private val items: MutableList<T>,
+    private val items: List<T>,
     private val onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<CarParametersAdapters<T>.ViewHolder>() {
 

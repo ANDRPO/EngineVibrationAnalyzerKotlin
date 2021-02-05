@@ -17,6 +17,7 @@
 
         <EditText
             android:id="@+id/searchCarList"
+            onTextChanged="@{(text, start, before, count) -> viewModel.updateList()}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"
@@ -37,7 +38,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewCarParameter"
-            app:setAdapter="@{viewModel.adapter}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

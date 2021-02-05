@@ -9,12 +9,12 @@ import org.koin.dsl.module
 
 @ExperimentalCoroutinesApi
 internal val selectCarModule = module {
-    viewModel { SelectCarViewModel(get(), get()) }
+    viewModel { SelectCarViewModel(get(), get(), get()) }
 }
 
 @ExperimentalCoroutinesApi
 internal val carParameterModule = module {
-    viewModel { CarParameterListViewModel(get(), get(), get()) }
+    viewModel { CarParameterListViewModel(get(), get(), get(), get()) }
 }
 
 @ExperimentalCoroutinesApi

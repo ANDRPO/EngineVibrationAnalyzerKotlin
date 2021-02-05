@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.papmobdev.data.entities.*
 
 @Database(
-    entities = [CarMarkEntity::class, CarModelEntity::class, CarGenerationEntity::class, MeasurementEntity::class, TestEntity::class],
+    entities = [CarMarkEntity::class, CarModelEntity::class, CarGenerationEntity::class, LastCarConfigurationEntity::class],
     version = 1,
     exportSchema = true
 )

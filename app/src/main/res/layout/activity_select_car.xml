@@ -10,17 +10,8 @@
             type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar.SelectCarViewModel" />
 
         <variable
-            name="ObjCarMark"
-            type="com.papmobdev.domain.cars.models.CarMark" />
-
-        <variable
-            name="ObjCarModel"
-            type="com.papmobdev.domain.cars.models.CarModel" />
-
-        <variable
-            name="ObjCarGeneration"
-            type="com.papmobdev.domain.cars.models.CarGeneration" />
-
+            name="configuration"
+            type="com.papmobdev.domain.cars.models.LastCarConfigurationModel" />
 
     </data>
 
@@ -49,7 +40,7 @@
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="28dp"
             android:paddingVertical="10dp"
-            android:text="@{viewModel.liveDataMark.name != null ? viewModel.liveDataMark.name : `Выбрать марку`}"
+            android:text="@{viewModel.liveDataConfiguration.nameMark != null ? viewModel.liveDataConfiguration.nameMark : `Выбрать марку`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +55,7 @@
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:paddingVertical="10dp"
-            android:text="@{viewModel.liveDataModel.name != null ? viewModel.liveDataModel.name : `Выбрать модель`}"
+            android:text="@{viewModel.liveDataConfiguration.nameModel != null ? viewModel.liveDataConfiguration.nameModel : `Выбрать модель`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +70,7 @@
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:paddingVertical="10dp"
-            android:text="@{viewModel.liveDataGeneration.name != null ? viewModel.liveDataGeneration.name : `Выбрать поколение`}"
+            android:text="@{viewModel.liveDataConfiguration.nameGeneration != null ? viewModel.liveDataConfiguration.nameGeneration : `Выбрать поколение`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,12 +82,12 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinnerDieselOrPetrol"
             android:layout_width="match_parent"
-            android:paddingHorizontal="10dp"
             android:layout_height="56dp"
-            android:textAppearance="?attr/textAppearanceHeadline6"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:background="@drawable/custom_background_spinner"
+            android:paddingHorizontal="10dp"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar" />

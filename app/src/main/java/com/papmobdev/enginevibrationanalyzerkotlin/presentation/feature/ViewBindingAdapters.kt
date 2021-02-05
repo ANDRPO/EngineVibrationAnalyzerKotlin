@@ -1,5 +1,6 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.feature
 
+import android.text.TextWatcher
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
 import androidx.databinding.adapters.TextViewBindingAdapter
@@ -10,7 +11,7 @@ fun RecyclerView.bindRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>){
     this.adapter = adapter
 }
 
-@BindingAdapter(value = ["setOnTextChanged"])
-fun EditText.setOnTextChanged(onTextChanged: TextViewBindingAdapter.OnTextChanged){
-
+@BindingAdapter(value = ["onTextChanged"])
+fun EditText.onTextChanged(onTextChanged: TextWatcher){
+    this.addTextChangedListener(onTextChanged)
 }

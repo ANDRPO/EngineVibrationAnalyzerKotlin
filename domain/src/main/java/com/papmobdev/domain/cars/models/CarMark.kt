@@ -1,6 +1,6 @@
 package com.papmobdev.domain.cars.models
 
 data class CarMark(
-    var id: Int,
-    var name: String
+    val id: Int,
+    val name: String
 )

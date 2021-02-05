@@ -10,6 +10,8 @@ import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCaseImpl
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCaseImpl
+import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCase
+import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCaseImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.loadKoinModules
@@ -42,6 +44,11 @@ object KoinModules {
         }
         factory<GetGenerationsUseCase> {
             GetGenerationsUseCaseImpl(
+                get()
+            )
+        }
+        factory<GetConfigurationCarUseCase> {
+            GetConfigurationCarUseCaseImpl(
                 get()
             )
         }
