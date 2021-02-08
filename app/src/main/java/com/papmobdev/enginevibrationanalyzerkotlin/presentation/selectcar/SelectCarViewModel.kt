@@ -1,5 +1,6 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
@@ -23,9 +24,6 @@ class SelectCarViewModel(
 
     val liveDataConfiguration: LiveData<LastCarConfigurationModel> = _liveDataConfiguration
 
-    private fun getLastConfiguration(): LiveData<Result<LastCarConfigurationModel>> =
-        getConfigurationCarUseCase().asLiveData()
-
     var nextModelIsNotNull: Boolean = true
 
     var nextGenerationIsNotNull: Boolean = true
@@ -36,33 +34,42 @@ class SelectCarViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getConfigurationCarUseCase.execute().collect { result ->
                 result.onSuccess {
-                    _liveDataConfiguration.value = it
+                    _liveDataConfiguration.postValue(it)
                 }
                 result.onFailure {
                     TODO("Add Exception")
                 }
             }
-        }
+        }.start()
     }
 
-    private suspend fun checkNextOptionsListIsNotNull(carOption: CodeOptionsCar) {
-        when (carOption) {
-            CodeOptionsCar.MARK -> liveDataConfiguration.value?.let { lastConfiguration ->
-                getModelsUseCase(lastConfiguration.fkCarMark).collect {
-                    nextModelIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
+    fun checkNextOptionsListIsNotNull(carOption: CodeOptionsCar) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (carOption) {
+                CodeOptionsCar.MARK -> _liveDataConfiguration.value?.let { lastConfiguration ->
+                    lastConfiguration.fkCarMark?.let { fkMark ->
+                        getModelsUseCase(fkMark).collect {
+                            nextModelIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
+                            Log.d("NEXTMODEL", nextModelIsNotNull.toString())
+                        }
+                    }
                 }
-            }
-            CodeOptionsCar.MODEL -> liveDataConfiguration.value?.let { lastConfiguration ->
-                getGenerationsUseCase(lastConfiguration.fkCarModel).collect {
-                    nextGenerationIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
+                CodeOptionsCar.MODEL -> _liveDataConfiguration.value?.let { lastConfiguration ->
+                    lastConfiguration.fkCarModel?.let { fkModel ->
+                        getGenerationsUseCase(fkModel).collect {
+                            nextGenerationIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
+                            Log.d("NEXTGENERATION", nextGenerationIsNotNull.toString())
+                        }
+                    }
                 }
+                /*CodeOptionsCar.GENERATION -> throw Exception("Generation table has no children")*/
             }
         }
     }
 
     fun notifySelection(carOption: CodeOptionsCar) {
         viewModelScope.launch(Dispatchers.IO) {
-            checkNextOptionsListIsNotNull(carOption)
+            fetchData()
         }
     }
 }

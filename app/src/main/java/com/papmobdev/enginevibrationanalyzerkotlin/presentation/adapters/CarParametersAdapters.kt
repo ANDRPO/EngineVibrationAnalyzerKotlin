@@ -11,7 +11,7 @@ import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBindi
 import java.util.*
 
 class CarParametersAdapters<T>(
-    private val items: List<T>,
+    private var items: List<T>,
     private val onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<CarParametersAdapters<T>.ViewHolder>() {
 
@@ -19,6 +19,10 @@ class CarParametersAdapters<T>(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemParamCarBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
+    }
+
+    fun setData(newList: List<*>) {
+        items = newList as List<T>
     }
 
     override fun getItemCount(): Int = items.size

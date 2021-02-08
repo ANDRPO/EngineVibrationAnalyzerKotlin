@@ -78,6 +78,11 @@ class SelectCarActivity : BaseActivity() {
         viewModel.apply {
             liveDataConfiguration.observe(this@SelectCarActivity, {
                 binding.configuration = it
+                if (it.fkCarMark != null) {
+                    checkNextOptionsListIsNotNull(CodeOptionsCar.MARK)
+                } else if (it.fkCarModel != null) {
+                    checkNextOptionsListIsNotNull(CodeOptionsCar.GENERATION)
+                }
             })
         }
     }
@@ -100,7 +105,7 @@ class SelectCarActivity : BaseActivity() {
 
     private fun modelCheckSelection(): Boolean {
         when {
-            binding.configuration.fkCarMark == null
+            binding.configuration?.fkCarMark == null
             -> showToastNotLastSelect("Не выбрана марка")
             !viewModel.nextModelIsNotNull -> showToastNotLastSelect("Список моделей для данной марки отсутствует")
             else -> return true
@@ -110,7 +115,7 @@ class SelectCarActivity : BaseActivity() {
 
     private fun generationCheckSelection(): Boolean {
         when {
-            binding.configuration.fkCarModel == null -> showToastNotLastSelect("Не выбрана модель")
+            binding.configuration?.fkCarModel == null -> showToastNotLastSelect("Не выбрана модель")
             !viewModel.nextGenerationIsNotNull -> showToastNotLastSelect("Список поколений для данной модели отсутствует")
             else -> return true
         }

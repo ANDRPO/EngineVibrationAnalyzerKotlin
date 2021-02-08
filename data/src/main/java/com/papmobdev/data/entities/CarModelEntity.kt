@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
 data class CarModelEntity(
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = "id_car_model") var idCarModel: Int,
+        @ColumnInfo(name = "id_car_model") val idCarModel: Int?,
 
-        @ColumnInfo(name = "fk_car_mark") var fkCarMark: Int,
+        @ColumnInfo(name = "fk_car_mark") val fkCarMark: Int?,
 
-        @ColumnInfo(name = "name") var carModelName: String
+        @ColumnInfo(name = "name") val carModelName: String?
 
 )

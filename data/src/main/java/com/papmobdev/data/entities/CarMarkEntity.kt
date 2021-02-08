@@ -1,5 +1,6 @@
 package com.papmobdev.data.entities
 
+import androidx.annotation.Nullable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,8 +9,10 @@ import androidx.room.PrimaryKey
 data class CarMarkEntity(
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = "id_car_mark") var idCarMark: Int,
+        @ColumnInfo(name = "id_car_mark")
+        @Nullable val idCarMark: Int?,
 
-        @ColumnInfo(name = "name") var carMarkName: String
+        @ColumnInfo(name = "name")
+        @Nullable val carMarkName: String?
 
 )

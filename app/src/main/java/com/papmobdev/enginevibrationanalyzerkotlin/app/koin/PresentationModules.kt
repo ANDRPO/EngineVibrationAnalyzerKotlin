@@ -14,7 +14,7 @@ internal val selectCarModule = module {
 
 @ExperimentalCoroutinesApi
 internal val carParameterModule = module {
-    viewModel { CarParameterListViewModel(get(), get(), get(), get()) }
+    viewModel { CarParameterListViewModel(get(), get(), get(), get(), get(), get()) }
 }
 
 @ExperimentalCoroutinesApi

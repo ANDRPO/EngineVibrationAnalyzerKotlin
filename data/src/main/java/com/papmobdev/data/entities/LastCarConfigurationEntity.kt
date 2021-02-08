@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "last_car_configuration")
 data class LastCarConfigurationEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_configuration") val idConfiguration: Int,
+    @ColumnInfo(name = "id_configuration") val idConfiguration: Int?,
 
     @ColumnInfo(name = "fk_car_mark") val fkCarMark: Int?,
 

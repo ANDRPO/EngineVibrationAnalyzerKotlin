@@ -19,13 +19,13 @@ interface AppDataBaseDao {
     fun getLastConfiguration(): LastCarConfigurationEntity
 
     @Query("SELECT * FROM car_mark WHERE id_car_mark = :idCarMark")
-    fun getOneCarMark(idCarMark: Int?): CarMarkEntity
+    fun getOneCarMark(idCarMark: Int?): CarMarkEntity?
 
     @Query("SELECT * FROM car_model WHERE id_car_model = :idCarModel")
-    fun getOneCarModel(idCarModel: Int?): CarModelEntity
+    fun getOneCarModel(idCarModel: Int?): CarModelEntity?
 
     @Query("SELECT * FROM car_generation WHERE id_car_generation = :idCarGeneration")
-    fun getOneCarGeneration(idCarGeneration: Int?): CarGenerationEntity
+    fun getOneCarGeneration(idCarGeneration: Int?): CarGenerationEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateLastConfiguration(lastCarConfigurationEntity: LastCarConfigurationEntity)

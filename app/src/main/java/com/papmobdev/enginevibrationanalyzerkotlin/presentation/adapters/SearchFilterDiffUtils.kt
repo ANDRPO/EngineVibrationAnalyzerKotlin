@@ -3,25 +3,19 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters
 import androidx.recyclerview.widget.DiffUtil
 
 class SearchFilterDiffUtils(
-    private val newOptionsList: List<*>,
-    private val oldOptionsList: List<*>
+    private val newOptionsList: List<*>?,
+    private val oldOptionsList: List<*>?
 ) : DiffUtil.Callback() {
 
 
-    override fun getOldListSize(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getNewListSize(): Int = newOptionsList?.size ?: 0
 
-    override fun getNewListSize(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getOldListSize(): Int = oldOptionsList?.size ?: 0
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        oldOptionsList?.get(oldItemPosition) == newOptionsList?.get(newItemPosition)
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        oldOptionsList?.get(oldItemPosition) == newOptionsList?.get(newItemPosition)
 
 }
