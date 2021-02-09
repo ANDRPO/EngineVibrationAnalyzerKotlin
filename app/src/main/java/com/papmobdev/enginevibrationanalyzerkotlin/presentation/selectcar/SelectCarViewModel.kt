@@ -67,7 +67,7 @@ class SelectCarViewModel(
         }
     }
 
-    fun notifySelection(carOption: CodeOptionsCar) {
+    fun notifySelection() {
         viewModelScope.launch(Dispatchers.IO) {
             fetchData()
         }

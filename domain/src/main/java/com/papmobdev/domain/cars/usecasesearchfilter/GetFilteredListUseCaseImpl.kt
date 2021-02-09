@@ -1,5 +1,6 @@
 package com.papmobdev.domain.cars.usecasesearchfilter
 
+import android.util.Log
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.CarModel
@@ -55,7 +56,7 @@ class GetFilteredListUseCaseImpl : GetFilteredListUseCase {
 
             }
             else{
-                TODO("Null list")
+                Log.e("NullList", "NullList")
             }
         }
 }

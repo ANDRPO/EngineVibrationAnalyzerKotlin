@@ -172,7 +172,7 @@ class CarParameterListViewModel(
                 }
             }
             if (newCarConfiguration != null) {
-                updateConfigurationCarUseCase.execute(newCarConfiguration).collect{
+                updateConfigurationCarUseCase.execute(newCarConfiguration).collect {
                     it.onSuccess {
                         Log.e("UPDATECONF", "SUCCESS")
                     }

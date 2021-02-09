@@ -1,10 +1,10 @@
 package com.papmobdev.domain.cars.models
 
 data class LastCarConfigurationModel(
-    val fkCarMark: Int?,
-    val nameMark: String?,
-    val fkCarModel: Int?,
-    val nameModel: String?,
-    val fkCarGeneration: Int?,
-    val nameGeneration: String?,
+    val fkCarMark: Int? = null,
+    val nameMark: String? = null,
+    val fkCarModel: Int? = null,
+    val nameModel: String? = null,
+    val fkCarGeneration: Int? = null,
+    val nameGeneration: String? = null
 )

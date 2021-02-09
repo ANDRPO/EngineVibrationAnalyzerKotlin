@@ -27,31 +27,16 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
         }
 
     override suspend fun getLastCarConfiguration(): LastCarConfigurationModel =
-        dao.getLastConfiguration().toDomain()
+        dao.getLastConfiguration()?.toDomain() ?: LastCarConfigurationModel()
 
     override suspend fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
-        val oldConfiguration = dao.getLastConfiguration()
+        val oldConfiguration = dao.getLastConfiguration() ?: LastCarConfigurationEntity()
 
-        val markIsEqual: Boolean
-        markIsEqual = if (oldConfiguration != null && newConfiguration != null) {
-            oldConfiguration.fkCarMark == newConfiguration.fkCarMark
-        } else {
-            false
-        }
+        val markIsEqual = oldConfiguration.fkCarMark == newConfiguration.fkCarMark
 
-        val modelIsEqual: Boolean
-        modelIsEqual = if (oldConfiguration != null && newConfiguration != null) {
-            oldConfiguration.fkCarModel == newConfiguration.fkCarModel
-        } else {
-            false
-        }
+        val modelIsEqual = oldConfiguration.fkCarModel == newConfiguration.fkCarModel
 
-        val generationIsEqual: Boolean
-        generationIsEqual = if (oldConfiguration != null && newConfiguration != null) {
-            oldConfiguration.fkCarGeneration == newConfiguration.fkCarGeneration
-        } else {
-            false
-        }
+        val generationIsEqual = oldConfiguration.fkCarGeneration == newConfiguration.fkCarGeneration
 
         val pushConfiguration = when {
             markIsEqual && modelIsEqual && generationIsEqual -> oldConfiguration
@@ -84,39 +69,26 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
     }
 
     private fun LastCarConfigurationEntity.toDomain(): LastCarConfigurationModel {
-        if (this == null) {
-            return LastCarConfigurationModel(
-                fkCarMark = null,
-                nameMark = null,
-                fkCarModel = null,
-                nameModel = null,
-                fkCarGeneration = null,
-                nameGeneration = null
-            )
-        } else {
-            var mark: CarMarkEntity?
-            fkCarMark.let {
-                mark = dao.getOneCarMark(it)
-            }
-            var model: CarModelEntity?
-            fkCarModel.let {
-                model = dao.getOneCarModel(it)
-            }
-            var generation: CarGenerationEntity?
-            fkCarGeneration.let {
-                generation = dao.getOneCarGeneration(it)
-            }
-            return LastCarConfigurationModel(
-                fkCarMark = mark?.idCarMark,
-                nameMark = mark?.carMarkName,
-                fkCarModel = model?.idCarModel,
-                nameModel = model?.carModelName,
-                fkCarGeneration = generation?.idCarGeneration,
-                nameGeneration = generation?.carGenerationName
-            )
+        var mark: CarMarkEntity?
+        fkCarMark.let {
+            mark = dao.getOneCarMark(it)
         }
-
-
+        var model: CarModelEntity?
+        fkCarModel.let {
+            model = dao.getOneCarModel(it)
+        }
+        var generation: CarGenerationEntity?
+        fkCarGeneration.let {
+            generation = dao.getOneCarGeneration(it)
+        }
+        return LastCarConfigurationModel(
+            fkCarMark = mark?.idCarMark,
+            nameMark = mark?.carMarkName,
+            fkCarModel = model?.idCarModel,
+            nameModel = model?.carModelName,
+            fkCarGeneration = generation?.idCarGeneration,
+            nameGeneration = generation?.carGenerationName
+        )
     }
 
     private fun CarMarkEntity.toDomain(): CarMark = CarMark(

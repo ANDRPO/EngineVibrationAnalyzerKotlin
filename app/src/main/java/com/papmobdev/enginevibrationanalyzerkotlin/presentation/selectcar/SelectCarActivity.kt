@@ -33,10 +33,7 @@ class SelectCarActivity : BaseActivity() {
     private val resultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                if (data != null) {
-                    viewModel.notifySelection(data.getSerializableExtra(KEY_TYPE_CAR_OPTION) as CodeOptionsCar)
-                }
+                viewModel.notifySelection()
             }
         }
 
@@ -103,11 +100,13 @@ class SelectCarActivity : BaseActivity() {
         }
     }
 
+
+
     private fun modelCheckSelection(): Boolean {
         when {
             binding.configuration?.fkCarMark == null
-            -> showToastNotLastSelect("Не выбрана марка")
-            !viewModel.nextModelIsNotNull -> showToastNotLastSelect("Список моделей для данной марки отсутствует")
+            -> showToastMissingFollowingListOptions("Не выбрана марка")
+            !viewModel.nextModelIsNotNull -> showToastMissingFollowingListOptions("Список моделей для данной марки отсутствует")
             else -> return true
         }
         return false
@@ -115,8 +114,8 @@ class SelectCarActivity : BaseActivity() {
 
     private fun generationCheckSelection(): Boolean {
         when {
-            binding.configuration?.fkCarModel == null -> showToastNotLastSelect("Не выбрана модель")
-            !viewModel.nextGenerationIsNotNull -> showToastNotLastSelect("Список поколений для данной модели отсутствует")
+            binding.configuration?.fkCarModel == null -> showToastMissingFollowingListOptions("Не выбрана модель")
+            !viewModel.nextGenerationIsNotNull -> showToastMissingFollowingListOptions("Список поколений для данной модели отсутствует")
             else -> return true
         }
         return false
@@ -128,7 +127,7 @@ class SelectCarActivity : BaseActivity() {
         resultLauncher.launch(intent)
     }
 
-    private fun showToastNotLastSelect(message: String) {
+    private fun showToastMissingFollowingListOptions(message: String) {
         Toast.makeText(this@SelectCarActivity, message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -5,12 +5,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityCarParameterListBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.CarParametersAdapters
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OnItemClickListener
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.SearchFilterDiffUtils
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_car_parameter_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,7 +40,9 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
                 viewModel = this@CarParameterListActivity.viewModel
             }
         initObservable()
-        viewModel.fetchData(getCarOption())
+        if (viewModel.listOptions.value == null) {
+            viewModel.fetchData(getCarOption())
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -45,6 +50,12 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
         viewModel.apply {
             listOptions.observe(this@CarParameterListActivity, {
                 adapter = CarParametersAdapters(it, this@CarParameterListActivity)
+                adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        binding.recyclerViewCarParameter.scrollToPosition(0)
+                    }
+                })
+
                 binding.recyclerViewCarParameter.adapter = adapter
                 binding.recyclerViewCarParameter.addItemDecoration(
                     DividerItemDecoration(
@@ -59,13 +70,11 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
                         )
                     }
                 )
-                adapter.notifyDataSetChanged()
 
+                adapter.notifyDataSetChanged()
             })
             diffResult.observe(this@CarParameterListActivity, {
-                diffResult.value.let {
-                    it?.dispatchUpdatesTo(adapter)
-                }
+                diffResult.value?.dispatchUpdatesTo(adapter)
             })
             listOptionsCopy.observe(this@CarParameterListActivity, {
                 adapter.setData(it)
@@ -74,10 +83,8 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
     }
 
     override fun <T> onClick(item: T) {
-        val intent = Intent()
         viewModel.updateConfiguration(getCarOption(), item)
-        intent.putExtra(KEY_TYPE_CAR_OPTION, getCarOption())
-        setResult(Activity.RESULT_OK, intent)
+        setResult(Activity.RESULT_OK, Intent())
         finish()
     }
 

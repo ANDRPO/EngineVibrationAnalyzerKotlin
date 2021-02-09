@@ -17,11 +17,11 @@
 
         <EditText
             android:id="@+id/searchCarList"
-            android:onTextChanged="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"
             android:maxLength="35"
+            android:onTextChanged="@{viewModel}"
             android:paddingHorizontal="14dp"
             android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
