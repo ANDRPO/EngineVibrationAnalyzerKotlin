@@ -1,35 +1,31 @@
 package com.papmobdev.data
 
-import com.papmobdev.data.entities.CarGenerationEntity
-import com.papmobdev.data.entities.CarMarkEntity
-import com.papmobdev.data.entities.CarModelEntity
-import com.papmobdev.data.entities.LastCarConfigurationEntity
+import com.papmobdev.data.entities.*
 import com.papmobdev.domain.cars.CarsDataSource
-import com.papmobdev.domain.cars.models.CarGeneration
-import com.papmobdev.domain.cars.models.CarMark
-import com.papmobdev.domain.cars.models.CarModel
-import com.papmobdev.domain.cars.models.LastCarConfigurationModel
+import com.papmobdev.domain.cars.models.*
 
 class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
-    override suspend fun getMarks(): List<CarMark> =
-        dao.getCarMarks().map {
-            it.toDomain()
-        }
+    override fun getMarks() = dao.getCarMarks().map {
+        it.toDomain()
+    }
 
-    override suspend fun getModels(idMark: Int): List<CarModel> =
-        dao.getCarModels(idMark).map {
-            it.toDomain()
-        }
+    override fun getModels(idMark: Int) = dao.getCarModels(idMark).map {
+        it.toDomain()
+    }
 
-    override suspend fun getGenerations(idModel: Int): List<CarGeneration> =
-        dao.getCarGenerations(idModel).map {
-            it.toDomain()
-        }
+    override fun getGenerations(idModel: Int) = dao.getCarGenerations(idModel).map {
+        it.toDomain()
+    }
 
-    override suspend fun getLastCarConfiguration(): LastCarConfigurationModel =
+    override fun getTypesFuel(): List<TypeFuel> = dao.getTypesFuel().map {
+        it.toDomain()
+
+    }
+
+    override fun getLastCarConfiguration(): LastCarConfigurationModel =
         dao.getLastConfiguration()?.toDomain() ?: LastCarConfigurationModel()
 
-    override suspend fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
+    override fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
         val oldConfiguration = dao.getLastConfiguration() ?: LastCarConfigurationEntity()
 
         val markIsEqual = oldConfiguration.fkCarMark == newConfiguration.fkCarMark
@@ -69,40 +65,39 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
     }
 
     private fun LastCarConfigurationEntity.toDomain(): LastCarConfigurationModel {
-        var mark: CarMarkEntity?
-        fkCarMark.let {
-            mark = dao.getOneCarMark(it)
-        }
-        var model: CarModelEntity?
-        fkCarModel.let {
-            model = dao.getOneCarModel(it)
-        }
-        var generation: CarGenerationEntity?
-        fkCarGeneration.let {
-            generation = dao.getOneCarGeneration(it)
-        }
+        val mark: CarMarkEntity? = dao.getOneCarMark(fkCarMark)
+        val model: CarModelEntity? = dao.getOneCarModel(fkCarModel)
+        val generation: CarGenerationEntity? = dao.getOneCarGeneration(fkCarGeneration)
         return LastCarConfigurationModel(
-            fkCarMark = mark?.idCarMark,
-            nameMark = mark?.carMarkName,
-            fkCarModel = model?.idCarModel,
-            nameModel = model?.carModelName,
-            fkCarGeneration = generation?.idCarGeneration,
-            nameGeneration = generation?.carGenerationName
+            fkCarMark = mark?.idCarMark.takeIf { mark != null },
+            nameMark = mark?.carMarkName.takeIf { mark != null },
+            fkCarModel = model?.idCarModel.takeIf { model != null },
+            nameModel = model?.carModelName.takeIf { model != null },
+            fkCarGeneration = generation?.idCarGeneration.takeIf { generation != null },
+            nameGeneration = generation?.carGenerationName.takeIf { generation != null }
         )
     }
 
-    private fun CarMarkEntity.toDomain(): CarMark = CarMark(
+
+    private fun CarMarkEntity.toDomain() = CarMark(
         id = this.idCarMark,
         name = this.carMarkName
     )
 
-    private fun CarModelEntity.toDomain(): CarModel = CarModel(
+    private fun CarModelEntity.toDomain() = CarModel(
         id = this.idCarModel,
         name = this.carModelName
     )
 
-    private fun CarGenerationEntity.toDomain(): CarGeneration = CarGeneration(
+    private fun CarGenerationEntity.toDomain() = CarGeneration(
         id = this.idCarGeneration,
         name = this.carGenerationName
     )
+
+    private fun CarTypeFuel.toDomain() = TypeFuel(
+        idFuel = this.idFuel,
+        nameFuel = this.nameFuel
+    )
 }
+
+

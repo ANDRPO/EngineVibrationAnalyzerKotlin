@@ -15,6 +15,9 @@ interface AppDataBaseDao {
     @Query("SELECT * FROM car_generation WHERE fk_car_model = :idCarModel")
     fun getCarGenerations(idCarModel: Int): List<CarGenerationEntity>
 
+    @Query("SELECT * FROM types_fuel")
+    fun getTypesFuel(): List<CarTypeFuel>
+
     @Query("SELECT * FROM last_car_configuration")
     fun getLastConfiguration(): LastCarConfigurationEntity?
 

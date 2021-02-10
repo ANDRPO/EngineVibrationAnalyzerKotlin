@@ -4,6 +4,7 @@ import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class GetConfigurationCarUseCaseImpl(
     private val carsDataSource: CarsDataSource

@@ -1,6 +1,5 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
-import android.util.Log
 import androidx.databinding.adapters.TextViewBindingAdapter
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.DiffUtil
@@ -12,14 +11,15 @@ import com.papmobdev.domain.cars.models.LastCarConfigurationModel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
-import com.papmobdev.domain.cars.usecasesearchfilter.GetFilteredListUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.SearchFilterDiffUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.*
 
 @ExperimentalCoroutinesApi
 class CarParameterListViewModel(
@@ -27,8 +27,7 @@ class CarParameterListViewModel(
     private val getModelsUseCase: GetModelsUseCase,
     private val getGenerationsUseCase: GetGenerationsUseCase,
     private val getConfigurationCarUseCase: GetConfigurationCarUseCase,
-    private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase,
-    private val getFilteredListUseCase: GetFilteredListUseCase
+    private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase
 ) : ViewModel(), TextViewBindingAdapter.OnTextChanged {
 
     private val _listOptions: MutableLiveData<MutableList<*>> = MutableLiveData()
@@ -39,6 +38,8 @@ class CarParameterListViewModel(
 
     private val _diffResult: MutableLiveData<DiffUtil.DiffResult> = MutableLiveData()
     val diffResult: LiveData<DiffUtil.DiffResult> = _diffResult
+
+    lateinit var carOptionsCar: CodeOptionsCar
 
     private lateinit var lastCarConfiguration: LastCarConfigurationModel
 
@@ -55,7 +56,6 @@ class CarParameterListViewModel(
         getConfigurationCarUseCase().asLiveData()
 
     fun fetchData(typeOption: CodeOptionsCar) {
-        Log.d("OPTIONTYPE", typeOption.name)
         viewModelScope.launch(Dispatchers.IO) {
             getLastConfiguration().asFlow().collect { result ->
                 result.onSuccess {
@@ -69,69 +69,101 @@ class CarParameterListViewModel(
         }
     }
 
-    private fun getList(typeOption: CodeOptionsCar) {
+    private suspend fun getList(typeOption: CodeOptionsCar) {
+        when (typeOption) {
+            CodeOptionsCar.MARK -> getMarks().asFlow().collect { result ->
+                result.onSuccess {
+                    initListsOptions(it)
+                }
+                result.onFailure {
+                    TODO("Add Exception")
+                }
+            }
+
+            CodeOptionsCar.MODEL -> lastCarConfiguration.fkCarMark?.let { id ->
+                getModels(id).asFlow()
+                    .collect { result ->
+                        result.onSuccess {
+                            initListsOptions(it)
+                        }
+                        result.onFailure {
+                            TODO("Add Exception")
+                        }
+                    }
+            }
+
+            CodeOptionsCar.GENERATION -> lastCarConfiguration.fkCarModel?.let { id ->
+                getGenerations(id).asFlow()
+                    .collect { result ->
+                        result.onSuccess {
+                            initListsOptions(it)
+                        }
+                        result.onFailure {
+                            TODO("Add Exception")
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun initListsOptions(it: List<*>?){
+        _listOptions.postValue(it?.toMutableList())
+        _listOptionsCopy.postValue(it?.toMutableList())
+    }
+
+    private fun updateList(query: String) {
         viewModelScope.launch(Dispatchers.Default) {
-            when (typeOption) {
-                CodeOptionsCar.MARK -> getMarks().asFlow().collect { result ->
-                    result.onSuccess {
-                        _listOptions.postValue(it.toMutableList())
-                        _listOptionsCopy.postValue(it.toMutableList())
-                    }
-                    result.onFailure {
-                        TODO("Add Exception")
-                    }
-                }
-
-                CodeOptionsCar.MODEL -> lastCarConfiguration.fkCarMark?.let { id ->
-                    getModels(id).asFlow()
-                        .collect { result ->
-                            result.onSuccess {
-                                _listOptions.postValue(it.toMutableList())
-                                _listOptionsCopy.postValue(it.toMutableList())
-                            }
-                            result.onFailure {
-                                TODO("Add Exception")
-                            }
-                        }
-                }
-
-                CodeOptionsCar.GENERATION -> lastCarConfiguration.fkCarModel?.let { id ->
-                    getGenerations(id).asFlow()
-                        .collect { result ->
-                            result.onSuccess {
-                                _listOptions.postValue(it.toMutableList())
-                                _listOptionsCopy.postValue(it.toMutableList())
-                            }
-                            result.onFailure {
-                                TODO("Add Exception")
-                            }
-                        }
-                }
-            }
+            filteredList(query)
         }
     }
 
-    fun updateList(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _listOptions.value?.let {
-                getFilteredListUseCase.execute(query, it).collect { result ->
-                    result.onSuccess { newList ->
-                        _diffResult.postValue(
-                            DiffUtil.calculateDiff(
-                                SearchFilterDiffUtils(
-                                    newList, _listOptionsCopy.value
-                                )
-                            )
-                        )
-                        _listOptionsCopy.postValue(newList)
-                    }
-                    result.onFailure {
-                        TODO("Add exception")
-                    }
+    private fun filteredList(query: String) {
+        val queryCopy = query.toLowerCase(Locale.getDefault())
+        var newList: MutableList<*>?
+        newList = _listOptions.value?.toMutableList()
+        if (queryCopy.isNotEmpty()) {
+            when (carOptionsCar) {
+                CodeOptionsCar.MARK -> {
+                    newList = newList?.filter {
+                        (it as CarMark).name?.toLowerCase(Locale.getDefault())
+                            ?.contains(queryCopy) == true
+                    }?.toMutableList()
+                }
+                CodeOptionsCar.MODEL -> {
+                    newList = newList?.filter {
+                        (it as CarModel).name?.toLowerCase(Locale.getDefault())
+                            ?.contains(queryCopy) == true
+                    }?.toMutableList()
+                }
+                CodeOptionsCar.GENERATION -> {
+                    newList = newList?.filter {
+                        (it as CarGeneration).name?.toLowerCase(Locale.getDefault())
+                            ?.contains(queryCopy) == true
+                    }?.toMutableList()
                 }
             }
         }
+        val oldList = _listOptionsCopy.value?.toMutableList()
+
+        updateListCopy(newList)
+        notifyDiffResult(newList?.toList(), oldList)
     }
+
+    private fun notifyDiffResult(newList: List<*>?, oldList: List<*>?) {
+        _diffResult.postValue(
+            DiffUtil.calculateDiff(
+                SearchFilterDiffUtils(
+                    newList,
+                    oldList
+                )
+            )
+        )
+    }
+
+    private fun updateListCopy(newList: MutableList<*>?) {
+        _listOptionsCopy.postValue(newList)
+    }
+
 
     fun <T> updateConfiguration(typeOption: CodeOptionsCar, item: T) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -174,10 +206,8 @@ class CarParameterListViewModel(
             if (newCarConfiguration != null) {
                 updateConfigurationCarUseCase.execute(newCarConfiguration).collect {
                     it.onSuccess {
-                        Log.e("UPDATECONF", "SUCCESS")
                     }
                     it.onFailure {
-                        Log.e("UPDATECONF", "FAIL")
                     }
                 }
             }

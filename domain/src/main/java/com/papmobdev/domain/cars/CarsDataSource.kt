@@ -1,15 +1,13 @@
 package com.papmobdev.domain.cars
 
-import com.papmobdev.domain.cars.models.CarGeneration
-import com.papmobdev.domain.cars.models.CarMark
-import com.papmobdev.domain.cars.models.CarModel
-import com.papmobdev.domain.cars.models.LastCarConfigurationModel
+import com.papmobdev.domain.cars.models.*
 
 interface CarsDataSource {
-    suspend fun getMarks(): List<CarMark>
-    suspend fun getModels(idMark: Int): List<CarModel>
-    suspend fun getGenerations(idModel: Int): List<CarGeneration>
+    fun getMarks(): List<CarMark>
+    fun getModels(idMark: Int): List<CarModel>
+    fun getGenerations(idModel: Int): List<CarGeneration>
+    fun getTypesFuel(): List<TypeFuel>
 
-    suspend fun getLastCarConfiguration(): LastCarConfigurationModel
-    suspend fun updateLastCarConfiguration(lastCarConfigurationModel: LastCarConfigurationModel): Boolean
+    fun getLastCarConfiguration(): LastCarConfigurationModel
+    fun updateLastCarConfiguration(lastCarConfigurationModel: LastCarConfigurationModel): Boolean
 }

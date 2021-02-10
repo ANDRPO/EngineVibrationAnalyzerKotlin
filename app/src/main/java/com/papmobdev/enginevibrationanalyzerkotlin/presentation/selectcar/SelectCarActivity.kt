@@ -17,6 +17,12 @@ import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCar
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.tinkoff.decoro.Mask
+import ru.tinkoff.decoro.MaskImpl
+import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser
+import ru.tinkoff.decoro.slots.PredefinedSlots
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher
+
 
 @ExperimentalCoroutinesApi
 class SelectCarActivity : BaseActivity() {
@@ -27,8 +33,6 @@ class SelectCarActivity : BaseActivity() {
 
     private val viewModel: SelectCarViewModel by viewModel()
     private lateinit var binding: ActivitySelectCarBinding
-
-    private val listFuel = listOf("Дизель", "Бензин")
 
     private val resultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -45,30 +49,9 @@ class SelectCarActivity : BaseActivity() {
             viewModel = this@SelectCarActivity.viewModel
         }
         initObservers()
-        initSpinner()
         initClickListeners()
+        initInputFilterFuelField()
         viewModel.fetchData()
-    }
-
-    private fun initSpinner() {
-        val adapter = ArrayAdapter(
-            this@SelectCarActivity,
-            R.layout.spinner_item,
-            listFuel
-        )
-        binding.spinnerDieselOrPetrol.adapter = adapter
-        binding.spinnerDieselOrPetrol.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                viewModel.selectOptionFuel = listFuel[position]
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
     }
 
     private fun initObservers() {
@@ -81,7 +64,41 @@ class SelectCarActivity : BaseActivity() {
                     checkNextOptionsListIsNotNull(CodeOptionsCar.GENERATION)
                 }
             })
+
+            liveDataTypesFuelList.observe(this@SelectCarActivity, { result ->
+                result.onSuccess { list ->
+                    val adapter = ArrayAdapter(
+                        this@SelectCarActivity,
+                        R.layout.spinner_item,
+                        list.map { it.nameFuel }
+                    )
+                    binding.spinnerDieselOrPetrol.adapter = adapter
+                    binding.spinnerDieselOrPetrol.onItemSelectedListener =
+                        object : OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                viewModel.selectOptionFuel = list[position]
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {}
+                        }
+                }
+                result.onFailure {
+                    showToastMissingFollowingListOptions("Не удалось загрузить список типов топлива")
+                }
+            }
+            )
         }
+    }
+
+    private fun initInputFilterFuelField() {
+        val slots = UnderscoreDigitSlotsParser().parseSlots("_._")
+        val formatWatcher = MaskFormatWatcher(MaskImpl.createNonTerminated(slots))
+        formatWatcher.installOn(binding.editTextEngineVolume)
     }
 
     private fun initClickListeners() {
@@ -99,7 +116,6 @@ class SelectCarActivity : BaseActivity() {
             }
         }
     }
-
 
 
     private fun modelCheckSelection(): Boolean {
