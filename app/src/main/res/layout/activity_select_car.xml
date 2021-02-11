@@ -40,6 +40,8 @@
             android:layout_height="56dp"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="28dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:paddingVertical="10dp"
             android:text="@{configuration.nameMark != null ? configuration.nameMark : `Выбрать марку`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
@@ -55,6 +57,8 @@
             android:layout_height="56dp"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:paddingVertical="10dp"
             android:text="@{configuration.nameModel != null ? configuration.nameModel : `Выбрать модель`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
@@ -70,7 +74,8 @@
             android:layout_height="56dp"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
-            android:paddingVertical="10dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@{configuration.nameGeneration != null ? configuration.nameGeneration : `Выбрать поколение`}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
@@ -86,13 +91,13 @@
             android:layout_height="56dp"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:layout_marginTop="@dimen/marginHorizontalActivitySelectCarsOptions"
-            app:setSelectedItemPosition="@{configuration.fkTypeFuel}"
             android:background="@drawable/custom_background_spinner"
             android:paddingHorizontal="10dp"
             android:textAppearance="?attr/textAppearanceHeadline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar" />
+            app:layout_constraintTop_toBottomOf="@+id/selectGenerationCar"
+            app:setSelectedItemPosition="@{configuration.fkTypeFuel}" />
 
         <ImageView
             android:layout_width="wrap_content"
