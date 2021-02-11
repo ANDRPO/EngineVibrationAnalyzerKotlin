@@ -56,6 +56,7 @@ class CarParameterListViewModel(
         getConfigurationCarUseCase().asLiveData()
 
     fun fetchData(typeOption: CodeOptionsCar) {
+        if (listOptions.value != null) return
         viewModelScope.launch(Dispatchers.IO) {
             getLastConfiguration().asFlow().collect { result ->
                 result.onSuccess {
@@ -106,7 +107,7 @@ class CarParameterListViewModel(
         }
     }
 
-    private fun initListsOptions(it: List<*>?){
+    private fun initListsOptions(it: List<*>?) {
         _listOptions.postValue(it?.toMutableList())
         _listOptionsCopy.postValue(it?.toMutableList())
     }
@@ -173,11 +174,7 @@ class CarParameterListViewModel(
                     if (lastCarConfiguration.fkCarMark != (item as CarMark).id)
                         newCarConfiguration = LastCarConfigurationModel(
                             fkCarMark = (item as CarMark).id,
-                            nameMark = (item as CarMark).name,
-                            fkCarModel = null,
-                            nameModel = null,
-                            fkCarGeneration = null,
-                            nameGeneration = null
+                            nameMark = (item as CarMark).name
                         )
                 }
                 CodeOptionsCar.MODEL -> {
@@ -186,9 +183,7 @@ class CarParameterListViewModel(
                             fkCarMark = lastCarConfiguration.fkCarMark,
                             nameMark = lastCarConfiguration.nameMark,
                             fkCarModel = (item as CarModel).id,
-                            nameModel = (item as CarModel).name,
-                            fkCarGeneration = null,
-                            nameGeneration = null
+                            nameModel = (item as CarModel).name
                         )
                 }
                 CodeOptionsCar.GENERATION -> {
@@ -204,12 +199,12 @@ class CarParameterListViewModel(
                 }
             }
             if (newCarConfiguration != null) {
-                updateConfigurationCarUseCase.execute(newCarConfiguration).collect {
-                    it.onSuccess {
-                    }
-                    it.onFailure {
-                    }
+                newCarConfiguration.apply {
+                    fkTypeFuel = lastCarConfiguration.fkTypeFuel
+                    engineVolume = lastCarConfiguration.engineVolume
+                    note = lastCarConfiguration.note
                 }
+                updateConfigurationCarUseCase.execute(newCarConfiguration).collect()
             }
         }
     }

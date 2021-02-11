@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 @ExperimentalCoroutinesApi
 internal val selectCarModule = module {
-    viewModel { SelectCarViewModel(get(), get(), get(), get()) }
+    viewModel { SelectCarViewModel(get(), get(), get(), get(), get()) }
 }
 
 @ExperimentalCoroutinesApi

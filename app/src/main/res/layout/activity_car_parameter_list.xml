@@ -28,6 +28,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/notifyEmptyListOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:text="Список пуст"
+            android:textAlignment="center"
+            android:visibility="gone"
+            app:layout_constraintVertical_bias="0.25"
+            android:textSize="@dimen/secondaryText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchCarList" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1.5dp"

@@ -10,10 +10,10 @@ import com.papmobdev.domain.cars.models.CarModel
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBinding
 import java.util.*
 
-class CarParametersAdapters<T>(
-    private var items: List<T>,
+class CarParametersAdapters(
+    private var items: List<*>,
     private val onItemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<CarParametersAdapters<T>.ViewHolder>() {
+) : RecyclerView.Adapter<CarParametersAdapters.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -22,7 +22,7 @@ class CarParametersAdapters<T>(
     }
 
     fun setData(newList: List<*>) {
-        items = newList as List<T>
+        items = newList
     }
 
     override fun getItemCount(): Int = items.size
@@ -31,7 +31,7 @@ class CarParametersAdapters<T>(
 
     inner class ViewHolder(private val binding: ItemParamCarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: T) {
+        fun<T> bind(item: T) {
             binding.apply {
                 when (item) {
                     is CarMark -> name = item.name

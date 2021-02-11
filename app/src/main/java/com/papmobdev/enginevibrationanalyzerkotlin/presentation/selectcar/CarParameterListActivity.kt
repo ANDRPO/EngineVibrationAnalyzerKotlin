@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.papmobdev.domain.cars.CodeOptionsCar
@@ -23,7 +25,7 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
     private lateinit var binding: ActivityCarParameterListBinding
 
     private val viewModel: CarParameterListViewModel by viewModel()
-    private lateinit var adapter: CarParametersAdapters<*>
+    private lateinit var adapter: CarParametersAdapters
 
     companion object {
         private const val KEY_TYPE_CAR_OPTION = "key_type_car_option"
@@ -37,10 +39,8 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
                 viewModel = this@CarParameterListActivity.viewModel
             }
         initObservable()
-        if (viewModel.listOptions.value == null) {
-            viewModel.fetchData(getCarOption())
-            viewModel.carOptionsCar = getCarOption()
-        }
+        viewModel.fetchData(getCarOption())
+        viewModel.carOptionsCar = getCarOption()
     }
 
     private fun initObservable() {
@@ -50,6 +50,15 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
             })
             diffResult.observe(this@CarParameterListActivity, {
                 diffResult.value?.dispatchUpdatesTo(adapter)
+                binding.apply {
+                    if (recyclerViewCarParameter.adapter?.itemCount == 0) {
+                        notifyEmptyListOptions.visibility = View.VISIBLE
+                        recyclerViewCarParameter.visibility = View.INVISIBLE
+                    } else {
+                        notifyEmptyListOptions.visibility = View.GONE
+                        recyclerViewCarParameter.visibility = View.VISIBLE
+                    }
+                }
             })
             listOptionsCopy.observe(this@CarParameterListActivity, {
                 adapter.setData(it)

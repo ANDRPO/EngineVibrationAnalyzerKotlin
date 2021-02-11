@@ -40,7 +40,9 @@ data class LastCarConfigurationEntity(
 
     @ColumnInfo(name = "fk_car_generation") val fkCarGeneration: Int? = null,
 
-    @ColumnInfo(name = "fk_type_fuel") val fkTypeFuel: String? = null,
+    @ColumnInfo(name = "fk_type_fuel", defaultValue = "1") val fkTypeFuel: Int? = null,
+
+    @ColumnInfo(name = "engine_volume") val engineVolume: Double? = null,
 
     @ColumnInfo(name = "note") val note: String? = null
 )

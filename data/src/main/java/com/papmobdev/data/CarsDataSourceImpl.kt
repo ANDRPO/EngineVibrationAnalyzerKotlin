@@ -19,42 +19,21 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
 
     override fun getTypesFuel(): List<TypeFuel> = dao.getTypesFuel().map {
         it.toDomain()
-
     }
 
     override fun getLastCarConfiguration(): LastCarConfigurationModel =
         dao.getLastConfiguration()?.toDomain() ?: LastCarConfigurationModel()
 
     override fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
-        val oldConfiguration = dao.getLastConfiguration() ?: LastCarConfigurationEntity()
-
-        val markIsEqual = oldConfiguration.fkCarMark == newConfiguration.fkCarMark
-
-        val modelIsEqual = oldConfiguration.fkCarModel == newConfiguration.fkCarModel
-
-        val generationIsEqual = oldConfiguration.fkCarGeneration == newConfiguration.fkCarGeneration
-
-        val pushConfiguration = when {
-            markIsEqual && modelIsEqual && generationIsEqual -> oldConfiguration
-            markIsEqual && modelIsEqual -> LastCarConfigurationEntity(
-                idConfiguration = 1,
-                fkCarMark = oldConfiguration.fkCarMark,
-                fkCarModel = oldConfiguration.fkCarModel,
-                fkCarGeneration = newConfiguration.fkCarGeneration
-            )
-            markIsEqual -> LastCarConfigurationEntity(
-                idConfiguration = 1,
-                fkCarMark = oldConfiguration.fkCarMark,
-                fkCarModel = newConfiguration.fkCarModel,
-                fkCarGeneration = null
-            )
-            else -> LastCarConfigurationEntity(
-                idConfiguration = 1,
-                fkCarMark = newConfiguration.fkCarMark,
-                fkCarModel = null,
-                fkCarGeneration = null
-            )
-        }
+        val pushConfiguration = LastCarConfigurationEntity(
+            idConfiguration = 1,
+            fkCarMark = newConfiguration.fkCarMark,
+            fkCarModel = newConfiguration.fkCarModel,
+            fkCarGeneration = newConfiguration.fkCarGeneration,
+            fkTypeFuel = newConfiguration.fkTypeFuel,
+            engineVolume = newConfiguration.engineVolume,
+            note = newConfiguration.note
+        )
         return try {
             dao.updateLastConfiguration(pushConfiguration)
             true
@@ -69,12 +48,15 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
         val model: CarModelEntity? = dao.getOneCarModel(fkCarModel)
         val generation: CarGenerationEntity? = dao.getOneCarGeneration(fkCarGeneration)
         return LastCarConfigurationModel(
-            fkCarMark = mark?.idCarMark.takeIf { mark != null },
-            nameMark = mark?.carMarkName.takeIf { mark != null },
-            fkCarModel = model?.idCarModel.takeIf { model != null },
-            nameModel = model?.carModelName.takeIf { model != null },
-            fkCarGeneration = generation?.idCarGeneration.takeIf { generation != null },
-            nameGeneration = generation?.carGenerationName.takeIf { generation != null }
+            fkCarMark = mark?.idCarMark,
+            nameMark = mark?.carMarkName,
+            fkCarModel = model?.idCarModel,
+            nameModel = model?.carModelName,
+            fkCarGeneration = generation?.idCarGeneration,
+            nameGeneration = generation?.carGenerationName,
+            fkTypeFuel = fkTypeFuel,
+            engineVolume = engineVolume,
+            note = note
         )
     }
 
