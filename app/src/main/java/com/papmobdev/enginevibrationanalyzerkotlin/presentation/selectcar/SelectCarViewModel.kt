@@ -1,6 +1,5 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
@@ -20,7 +19,7 @@ class SelectCarViewModel(
     private val getModelsUseCase: GetModelsUseCase,
     private val getGenerationsUseCase: GetGenerationsUseCase,
     private val getConfigurationCarUseCase: GetConfigurationCarUseCase,
-    private val getTypesFuelUseCase: GetTypesFuelUseCase,
+    getTypesFuelUseCase: GetTypesFuelUseCase,
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase
 ) : ViewModel() {
 
@@ -41,7 +40,7 @@ class SelectCarViewModel(
                     _liveDataConfiguration.postValue(it)
                 }
                 result.onFailure {
-                    TODO("Add Exception")
+                    throw Exception("Error getting the last item configuration")
                 }
             }
         }
@@ -64,6 +63,7 @@ class SelectCarViewModel(
                         }
                     }
                 }
+                CodeOptionsCar.GENERATION -> return@launch
             }
         }
     }

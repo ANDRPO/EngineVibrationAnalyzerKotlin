@@ -19,6 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.util.*
 
 @ExperimentalCoroutinesApi
@@ -64,7 +65,7 @@ class CarParameterListViewModel(
                     getList(typeOption)
                 }
                 result.onFailure {
-                    TODO("Add exception")
+                    throw Exception("Error getting the last item configuration")
                 }
             }
         }
@@ -77,7 +78,7 @@ class CarParameterListViewModel(
                     initListsOptions(it)
                 }
                 result.onFailure {
-                    TODO("Add Exception")
+                    throw Exception("Error getting the list of mark")
                 }
             }
 
@@ -88,7 +89,7 @@ class CarParameterListViewModel(
                             initListsOptions(it)
                         }
                         result.onFailure {
-                            TODO("Add Exception")
+                            throw Exception("Error getting the list of model")
                         }
                     }
             }
@@ -100,7 +101,7 @@ class CarParameterListViewModel(
                             initListsOptions(it)
                         }
                         result.onFailure {
-                            TODO("Add Exception")
+                            throw Exception("Error getting the list of generation")
                         }
                     }
             }
