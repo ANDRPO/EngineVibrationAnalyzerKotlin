@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -21,10 +19,8 @@ import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivit
 import kotlinx.android.synthetic.main.activity_select_car.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.tinkoff.decoro.Mask
 import ru.tinkoff.decoro.MaskImpl
 import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser
-import ru.tinkoff.decoro.slots.PredefinedSlots
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher
 
 
