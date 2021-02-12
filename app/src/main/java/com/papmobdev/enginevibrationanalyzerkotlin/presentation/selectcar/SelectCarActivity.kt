@@ -64,7 +64,7 @@ class SelectCarActivity : BaseActivity() {
                     v.append("0")
                 }
                 if (!hasFocus) {
-                    viewModel?.updateEngineVolumeConfiguration(v.text.toString().toDouble())
+                    viewModel?.updateEngineVolumeConfiguration(v.text.toString())
                 }
             }
 

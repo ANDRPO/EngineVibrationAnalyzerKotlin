@@ -68,11 +68,11 @@ class SelectCarViewModel(
         }
     }
 
-    fun updateEngineVolumeConfiguration(value: Double?) {
+    fun updateEngineVolumeConfiguration(value: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val configuration = _liveDataConfiguration.value
             if (configuration != null) {
-                configuration.engineVolume = value
+                configuration.engineVolume = if(!value.isNullOrEmpty()) value.toDouble() else null
                 updateConfigurationCarUseCase.execute(configuration).collect()
             }
         }
