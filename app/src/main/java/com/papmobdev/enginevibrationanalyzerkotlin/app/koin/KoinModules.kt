@@ -1,8 +1,8 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.app.koin
 
-import com.papmobdev.data.AppDataBase
-import com.papmobdev.data.AppDataBaseInstance
-import com.papmobdev.data.CarsDataSourceImpl
+import com.papmobdev.data.database.AppDataBase
+import com.papmobdev.data.database.AppDataBaseInstance
+import com.papmobdev.data.database.CarsDataSourceImpl
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCaseImpl

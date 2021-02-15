@@ -1,4 +1,4 @@
-package com.papmobdev.data.entities
+package com.papmobdev.data.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

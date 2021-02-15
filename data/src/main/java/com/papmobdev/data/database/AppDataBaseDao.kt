@@ -1,7 +1,7 @@
-package com.papmobdev.data
+package com.papmobdev.data.database
 
 import androidx.room.*
-import com.papmobdev.data.entities.*
+import com.papmobdev.data.database.entities.*
 
 @Dao
 interface AppDataBaseDao {

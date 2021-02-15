@@ -1,6 +1,6 @@
-package com.papmobdev.data
+package com.papmobdev.data.database
 
-import com.papmobdev.data.entities.*
+import com.papmobdev.data.database.entities.*
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.*
 

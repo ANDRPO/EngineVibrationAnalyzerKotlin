@@ -1,6 +1,5 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -43,7 +42,6 @@ class SelectCarActivity : BaseActivity() {
             }
         }
 
-    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = binding<ActivitySelectCarBinding>(R.layout.activity_select_car).value.apply {
@@ -67,7 +65,7 @@ class SelectCarActivity : BaseActivity() {
                     viewModel?.updateEngineVolumeConfiguration(v.text.toString())
                 }
             }
-
+            
             editTextInputNote.setOnFocusChangeListener { view: View, b: Boolean ->
                 (view as EditText)
                 viewModel?.updateNoteConfiguration(view.text.toString())

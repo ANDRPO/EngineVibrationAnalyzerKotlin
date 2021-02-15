@@ -1,10 +1,7 @@
-package com.papmobdev.data
+package com.papmobdev.data.database
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 
 object AppDataBaseInstance {
 

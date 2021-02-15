@@ -3,6 +3,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
@@ -11,9 +12,8 @@ import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBindi
 import java.util.*
 
 class CarParametersAdapters(
-    private var items: List<*>,
     private val onItemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<CarParametersAdapters.ViewHolder>() {
+) : ListAdapter<OptionsModel, CarParametersAdapters.ViewHolder>(SearchFilterDiffUtils()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,23 +21,19 @@ class CarParametersAdapters(
         return ViewHolder(binding)
     }
 
-    fun setData(newList: List<*>) {
-        items = newList
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.bind(currentList[position])
+
+    override fun getItemCount(): Int {
+        return currentList.size
     }
-
-    override fun getItemCount(): Int = items.size
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
     inner class ViewHolder(private val binding: ItemParamCarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun<T> bind(item: T) {
+        fun bind(item: OptionsModel) {
             binding.apply {
-                when (item) {
-                    is CarMark -> name = item.name
-                    is CarModel -> name = item.name
-                    is CarGeneration -> name = item.name
-                }
+                id = item.id
+                name = item.name
                 rootItem.setOnClickListener { onItemClickListener.onClick(item) }
                 binding.executePendingBindings()
             }

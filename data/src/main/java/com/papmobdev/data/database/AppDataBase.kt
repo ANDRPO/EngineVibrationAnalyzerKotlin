@@ -1,8 +1,8 @@
-package com.papmobdev.data
+package com.papmobdev.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.papmobdev.data.entities.*
+import com.papmobdev.data.database.entities.*
 
 @Database(
     entities = [

@@ -1,4 +1,4 @@
-package com.papmobdev.data.entities
+package com.papmobdev.data.database.entities
 
 import androidx.annotation.Nullable
 import androidx.room.ColumnInfo

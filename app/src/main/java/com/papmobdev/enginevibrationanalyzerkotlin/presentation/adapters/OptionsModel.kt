@@ -1,5 +1,7 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters
 
-interface OnItemClickListener {
-    fun onClick(item: OptionsModel)
-}
+data class OptionsModel(
+    val id: Int?,
+    val name: String?
+)
+
