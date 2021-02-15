@@ -2,8 +2,8 @@
 <resources>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorPrimary">#202020</color>
-    <color name="colorPrimaryDark">#151515</color>
+    <color name="colorPrimary">#1A1A1A</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#E600F0FF</color>
     <color name="colorBackground">#202020</color>
     <color name="colorBlackBackground">#151515</color>
