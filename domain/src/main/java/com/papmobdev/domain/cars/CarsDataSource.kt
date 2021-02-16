@@ -1,6 +1,7 @@
 package com.papmobdev.domain.cars
 
 import com.papmobdev.domain.cars.models.*
+import kotlinx.coroutines.flow.Flow
 
 interface CarsDataSource {
     fun getMarks(): List<CarMark>
@@ -8,6 +9,6 @@ interface CarsDataSource {
     fun getGenerations(idModel: Int): List<CarGeneration>
     fun getTypesFuel(): List<TypeFuel>
 
-    fun getLastCarConfiguration(): LastCarConfigurationModel
+    fun getLastCarConfiguration(): Flow<LastCarConfigurationModel>
     fun updateLastCarConfiguration(lastCarConfigurationModel: LastCarConfigurationModel): Boolean
 }

@@ -2,5 +2,7 @@ package com.papmobdev.domain.cars.usecaseslastconfigurationcar
 
 import com.papmobdev.domain.FlowUseCaseOut
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-interface GetConfigurationCarUseCase: FlowUseCaseOut<LastCarConfigurationModel>
+@ExperimentalCoroutinesApi
+interface ObserveConfigurationCarUseCase: FlowUseCaseOut<LastCarConfigurationModel>

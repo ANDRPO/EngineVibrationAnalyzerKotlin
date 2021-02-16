@@ -10,7 +10,7 @@ import com.papmobdev.domain.cars.models.LastCarConfigurationModel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
-import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCase
+import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OptionsModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class CarParameterListViewModel(
     private val getMarksUseCase: GetMarksUseCase,
     private val getModelsUseCase: GetModelsUseCase,
     private val getGenerationsUseCase: GetGenerationsUseCase,
-    private val getConfigurationCarUseCase: GetConfigurationCarUseCase,
+    private val observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase
 ) : ViewModel(), TextViewBindingAdapter.OnTextChanged {
 
@@ -52,7 +52,10 @@ class CarParameterListViewModel(
         getGenerationsUseCase(id).asLiveData()
 
     private fun getLastConfiguration(): LiveData<Result<LastCarConfigurationModel>> =
-        getConfigurationCarUseCase().asLiveData()
+        observeConfigurationCarUseCase().asLiveData()
+
+    private val _showErrorMessage = MutableLiveData<String>()
+    val showErrorMessage = _showErrorMessage
 
     fun fetchData(typeOption: CodeOptionsCar) {
         if (listOptions.value != null) return
@@ -61,9 +64,6 @@ class CarParameterListViewModel(
                 result.onSuccess {
                     lastCarConfiguration = it
                     getList(typeOption)
-                }
-                result.onFailure {
-                    throw Exception("Error getting the last item configuration")
                 }
             }
         }
@@ -75,9 +75,6 @@ class CarParameterListViewModel(
                 result.onSuccess {
                     initListsOptions(it)
                 }
-                result.onFailure {
-                    throw Exception("Error getting the list of mark")
-                }
             }
 
             CodeOptionsCar.MODEL -> lastCarConfiguration.fkCarMark?.let { id ->
@@ -85,9 +82,6 @@ class CarParameterListViewModel(
                     .collect { result ->
                         result.onSuccess {
                             initListsOptions(it)
-                        }
-                        result.onFailure {
-                            throw Exception("Error getting the list of model")
                         }
                     }
             }
@@ -97,9 +91,6 @@ class CarParameterListViewModel(
                     .collect { result ->
                         result.onSuccess {
                             initListsOptions(it)
-                        }
-                        result.onFailure {
-                            throw Exception("Error getting the list of generation")
                         }
                     }
             }
@@ -191,9 +182,7 @@ class CarParameterListViewModel(
                 }
                 updateConfigurationCarUseCase.execute(newCarConfiguration).collect { result ->
                     result.onSuccess {
-                        //TODO("Обработать")
-                    }.onFailure {
-                        //TODO("Обработать")
+                        if (!it) _showErrorMessage.postValue("Ошибка при обновлении конфигурации")
                     }
                 }
             }

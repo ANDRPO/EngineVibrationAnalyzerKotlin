@@ -10,8 +10,8 @@ import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCaseImpl
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCaseImpl
-import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCase
-import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCaseImpl
+import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
+import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCaseImpl
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCaseImpl
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCase
@@ -51,8 +51,8 @@ object KoinModules {
                 get()
             )
         }
-        factory<GetConfigurationCarUseCase> {
-            GetConfigurationCarUseCaseImpl(
+        factory<ObserveConfigurationCarUseCase> {
+            ObserveConfigurationCarUseCaseImpl(
                 get()
             )
         }

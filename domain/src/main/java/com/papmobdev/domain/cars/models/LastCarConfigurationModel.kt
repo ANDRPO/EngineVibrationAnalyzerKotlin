@@ -10,4 +10,8 @@ data class LastCarConfigurationModel(
     var fkTypeFuel: Int? = 1,
     var engineVolume: Double? = null,
     var note: String? = null
-)
+) {
+    companion object {
+        fun empty() = LastCarConfigurationModel()
+    }
+}

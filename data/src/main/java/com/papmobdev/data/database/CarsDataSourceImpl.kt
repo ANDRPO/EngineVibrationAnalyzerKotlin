@@ -3,6 +3,11 @@ package com.papmobdev.data.database
 import com.papmobdev.data.database.entities.*
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
     override fun getMarks() = dao.getCarMarks().map {
@@ -21,8 +26,10 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
         it.toDomain()
     }
 
-    override fun getLastCarConfiguration(): LastCarConfigurationModel =
-        dao.getLastConfiguration()?.toDomain() ?: LastCarConfigurationModel()
+    override fun getLastCarConfiguration(): Flow<LastCarConfigurationModel> =
+        dao.getLastConfiguration().map {
+            it.toDomain()
+        }.flowOn(Dispatchers.IO)
 
     override fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
         val pushConfiguration = LastCarConfigurationEntity(
@@ -59,7 +66,6 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
             note = note
         )
     }
-
 
     private fun CarMarkEntity.toDomain() = CarMark(
         id = this.idCarMark,

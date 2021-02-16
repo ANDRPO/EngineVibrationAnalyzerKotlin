@@ -6,15 +6,22 @@ import com.papmobdev.domain.cars.models.CarModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.lang.Exception
 
 @ExperimentalCoroutinesApi
 class GetGenerationsUseCaseImpl(
     private val carsDataSource: CarsDataSource
 ) : GetGenerationsUseCase {
-    override fun execute(param: Int): Flow<Result<List<CarGeneration>>> = flow {
-        val generationsData = param.let {
-            carsDataSource.getGenerations(it)
+    override fun execute(param: Int): Flow<Result<List<CarGeneration>>> = try {
+        flow {
+            val generationsData = param.let {
+                carsDataSource.getGenerations(it)
+            }
+            emit(Result.success(generationsData))
         }
-        emit(Result.success(generationsData))
+    } catch (e: Exception) {
+        flow {
+            emit(Result.success(listOf<CarGeneration>()))
+        }
     }
 }

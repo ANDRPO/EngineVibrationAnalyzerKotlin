@@ -25,22 +25,10 @@ import ru.tinkoff.decoro.watchers.MaskFormatWatcher
 
 @ExperimentalCoroutinesApi
 class SelectCarActivity : BaseActivity() {
-
-    companion object {
-        private const val KEY_TYPE_CAR_OPTION = "key_type_car_option"
-    }
-
     private val viewModel: SelectCarViewModel by viewModel()
     private lateinit var binding: ActivitySelectCarBinding
 
     private val maskEngineVolume = Regex("[0-9][.]")
-
-    private val resultLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.fetchData()
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +40,6 @@ class SelectCarActivity : BaseActivity() {
         initClickListeners()
         initInputFilterFuelField()
         initEditTextHasFocus()
-        viewModel.fetchData()
     }
 
     private fun initEditTextHasFocus() {
@@ -65,7 +52,7 @@ class SelectCarActivity : BaseActivity() {
                     viewModel?.updateEngineVolumeConfiguration(v.text.toString())
                 }
             }
-            
+
             editTextInputNote.setOnFocusChangeListener { view: View, b: Boolean ->
                 (view as EditText)
                 viewModel?.updateNoteConfiguration(view.text.toString())
@@ -77,12 +64,12 @@ class SelectCarActivity : BaseActivity() {
         viewModel.apply {
             liveDataConfiguration.observe(this@SelectCarActivity, {
                 binding.apply {
-                    configuration = it
+                    configuration = it.getOrNull()
                 }
 
-                if (it.fkCarModel == null) {
+                if (it.getOrNull()?.fkCarModel == null) {
                     checkNextOptionsListIsNotNull(CodeOptionsCar.MARK)
-                } else if (it.fkCarGeneration == null) {
+                } else if (it.getOrNull()?.fkCarGeneration == null) {
                     checkNextOptionsListIsNotNull(CodeOptionsCar.MODEL)
                 }
             })
@@ -120,6 +107,10 @@ class SelectCarActivity : BaseActivity() {
                 }
             }
             )
+
+            showErrorMessage.observe(this@SelectCarActivity, {
+                showToastMissingFollowingListOptions(it)
+            })
         }
     }
 
@@ -171,10 +162,7 @@ class SelectCarActivity : BaseActivity() {
     }
 
     private fun openCarParameterList(typeOptionCars: CodeOptionsCar) {
-        binding.root.clearFocus()
-        val intent = Intent(this, CarParameterListActivity::class.java)
-        intent.putExtra(KEY_TYPE_CAR_OPTION, typeOptionCars)
-        resultLauncher.launch(intent)
+        CarParameterListActivity.start(this, typeOptionCars)
     }
 
     private fun showToastMissingFollowingListOptions(message: String) {

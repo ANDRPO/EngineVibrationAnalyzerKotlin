@@ -2,11 +2,12 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
+import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
 import com.papmobdev.domain.cars.models.TypeFuel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
-import com.papmobdev.domain.cars.usecaseslastconfigurationcar.GetConfigurationCarUseCase
+import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCase
 import kotlinx.coroutines.Dispatchers
@@ -18,46 +19,35 @@ import kotlinx.coroutines.launch
 class SelectCarViewModel(
     private val getModelsUseCase: GetModelsUseCase,
     private val getGenerationsUseCase: GetGenerationsUseCase,
-    private val getConfigurationCarUseCase: GetConfigurationCarUseCase,
+    private val observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
     getTypesFuelUseCase: GetTypesFuelUseCase,
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase
 ) : ViewModel() {
 
-    private val _liveDataConfiguration: MutableLiveData<LastCarConfigurationModel> =
-        MutableLiveData()
-    val liveDataConfiguration: LiveData<LastCarConfigurationModel> = _liveDataConfiguration
+    val liveDataConfiguration: LiveData<Result<LastCarConfigurationModel>> =
+        observeConfigurationCarUseCase.execute().asLiveData()
 
     val liveDataTypesFuelList: LiveData<Result<List<TypeFuel>>> = getTypesFuelUseCase().asLiveData()
+
+    private val _showErrorMessage = MutableLiveData<String>()
+    val showErrorMessage = _showErrorMessage
 
     var nextModelIsNotNull: Boolean = true
 
     var nextGenerationIsNotNull: Boolean = true
 
-    fun fetchData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getConfigurationCarUseCase.execute().collect { result ->
-                result.onSuccess {
-                    _liveDataConfiguration.postValue(it)
-                }
-                result.onFailure {
-                    throw Exception("Error getting the last item configuration")
-                }
-            }
-        }
-    }
-
     fun checkNextOptionsListIsNotNull(carOption: CodeOptionsCar) {
         viewModelScope.launch(Dispatchers.IO) {
             when (carOption) {
-                CodeOptionsCar.MARK -> _liveDataConfiguration.value?.let { lastConfiguration ->
-                    lastConfiguration.fkCarMark?.let { fkMark ->
+                CodeOptionsCar.MARK -> liveDataConfiguration.value.let { lastConfiguration ->
+                    lastConfiguration?.getOrNull()?.fkCarMark?.let { fkMark ->
                         getModelsUseCase(fkMark).collect {
                             nextModelIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
                         }
                     }
                 }
-                CodeOptionsCar.MODEL -> _liveDataConfiguration.value?.let { lastConfiguration ->
-                    lastConfiguration.fkCarModel?.let { fkModel ->
+                CodeOptionsCar.MODEL -> liveDataConfiguration.value.let { lastConfiguration ->
+                    lastConfiguration?.getOrNull()?.fkCarModel?.let { fkModel ->
                         getGenerationsUseCase(fkModel).collect {
                             nextGenerationIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
                         }
@@ -70,9 +60,10 @@ class SelectCarViewModel(
 
     fun updateEngineVolumeConfiguration(value: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val configuration = _liveDataConfiguration.value
+            val configuration = liveDataConfiguration.value?.getOrNull()
             if (configuration != null) {
-                configuration.engineVolume = if(!value.isNullOrEmpty()) value.toDouble() else null
+                configuration.engineVolume =
+                    if (!value.isNullOrEmpty()) value.toDouble() else null
                 updateConfigurationCarUseCase.execute(configuration).collect()
             }
         }
@@ -80,7 +71,7 @@ class SelectCarViewModel(
 
     fun updateTypeFuelConfiguration(fkFuel: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val configuration = _liveDataConfiguration.value
+            val configuration = liveDataConfiguration.value?.getOrNull()
             if (configuration != null) {
                 configuration.fkTypeFuel = fkFuel
                 updateConfigurationCarUseCase.execute(configuration).collect()
@@ -90,7 +81,7 @@ class SelectCarViewModel(
 
     fun updateNoteConfiguration(value: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val configuration = _liveDataConfiguration.value
+            val configuration = liveDataConfiguration.value?.getOrNull()
             if (configuration != null) {
                 configuration.note = value
                 updateConfigurationCarUseCase.execute(configuration).collect()
