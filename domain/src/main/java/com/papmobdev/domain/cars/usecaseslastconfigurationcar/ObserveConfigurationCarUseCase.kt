@@ -5,4 +5,4 @@ import com.papmobdev.domain.cars.models.LastCarConfigurationModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-interface ObserveConfigurationCarUseCase: FlowUseCaseOut<LastCarConfigurationModel>
+interface ObserveConfigurationCarUseCase : FlowUseCaseOut<LastCarConfigurationModel>

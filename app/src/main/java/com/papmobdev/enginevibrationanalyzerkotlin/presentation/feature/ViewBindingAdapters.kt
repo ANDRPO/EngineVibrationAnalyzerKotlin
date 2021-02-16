@@ -5,7 +5,7 @@ import androidx.databinding.BindingAdapter
 
 @BindingAdapter(value = ["setSelectedItemPosition"])
 fun AppCompatSpinner.setSelectedItemPosition(position: Int) {
-    if (position-1 <= this.count) {
-        this.setSelection(position-1)
+    if (position - 1 <= this.count) {
+        this.setSelection(position - 1)
     }
 }

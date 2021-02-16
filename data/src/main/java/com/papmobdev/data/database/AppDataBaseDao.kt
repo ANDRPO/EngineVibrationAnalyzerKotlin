@@ -1,6 +1,9 @@
 package com.papmobdev.data.database
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.papmobdev.data.database.entities.*
 import kotlinx.coroutines.flow.Flow
 

@@ -2,7 +2,6 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
 
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
-import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
 import com.papmobdev.domain.cars.models.TypeFuel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase

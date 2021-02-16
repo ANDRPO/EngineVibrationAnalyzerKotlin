@@ -2,14 +2,9 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.papmobdev.domain.cars.models.CarGeneration
-import com.papmobdev.domain.cars.models.CarMark
-import com.papmobdev.domain.cars.models.CarModel
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBinding
-import java.util.*
 
 class CarParametersAdapters(
     private val onItemClickListener: OnItemClickListener

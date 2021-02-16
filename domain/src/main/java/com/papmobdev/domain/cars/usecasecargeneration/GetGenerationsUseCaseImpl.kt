@@ -2,11 +2,9 @@ package com.papmobdev.domain.cars.usecasecargeneration
 
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.CarGeneration
-import com.papmobdev.domain.cars.models.CarModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 
 @ExperimentalCoroutinesApi
 class GetGenerationsUseCaseImpl(

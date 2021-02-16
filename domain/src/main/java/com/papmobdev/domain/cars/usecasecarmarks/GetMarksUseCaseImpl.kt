@@ -5,7 +5,6 @@ import com.papmobdev.domain.cars.models.CarMark
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 
 @ExperimentalCoroutinesApi
 class GetMarksUseCaseImpl(
