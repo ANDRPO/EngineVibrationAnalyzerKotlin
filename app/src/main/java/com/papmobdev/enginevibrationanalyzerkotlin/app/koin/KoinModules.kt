@@ -3,6 +3,9 @@ package com.papmobdev.enginevibrationanalyzerkotlin.app.koin
 import com.papmobdev.data.database.AppDataBase
 import com.papmobdev.data.database.AppDataBaseInstance
 import com.papmobdev.data.database.CarsDataSourceImpl
+import com.papmobdev.data.sensor.AppAccelerometer
+import com.papmobdev.data.sensor.AppAccelerometerImpl
+import com.papmobdev.data.sensor.SensorDataSourceImpl
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCaseImpl
@@ -16,6 +19,9 @@ import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfiguratio
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCaseImpl
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCase
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCaseImpl
+import com.papmobdev.domain.sensor.SensorDataSource
+import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCase
+import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCaseImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.loadKoinModules
@@ -29,9 +35,16 @@ object KoinModules {
         single { get<AppDataBase>().carsDao() }
     }
 
+    private val sensorModule = module {
+        single<AppAccelerometer> { AppAccelerometerImpl(androidContext()) }
+    }
+
     private val dataSourceModule = module {
         factory<CarsDataSource> {
             CarsDataSourceImpl(get())
+        }
+        single<SensorDataSource> {
+            SensorDataSourceImpl(get())
         }
     }
 
@@ -66,12 +79,18 @@ object KoinModules {
                 get()
             )
         }
+        single<ObserveSensorUseCase> {
+            ObserveSensorUseCaseImpl(
+                get()
+            )
+        }
     }
 
     private val baseAppModule = module {
         loadKoinModules(
             listOf(
                 carsDataBaseModule,
+                sensorModule,
                 dataSourceModule,
                 useCaseModule
             )

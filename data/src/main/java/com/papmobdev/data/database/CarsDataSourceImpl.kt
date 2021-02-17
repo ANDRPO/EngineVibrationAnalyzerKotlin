@@ -1,5 +1,6 @@
 package com.papmobdev.data.database
 
+import android.util.Log
 import com.papmobdev.data.database.entities.*
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.*
@@ -30,6 +31,7 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
             it.toDomain()
         }.flowOn(Dispatchers.IO)
 
+
     override fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
         val pushConfiguration = LastCarConfigurationEntity(
             idConfiguration = 1,
@@ -49,22 +51,22 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
 
     }
 
-    private fun LastCarConfigurationEntity.toDomain(): LastCarConfigurationModel {
-        val mark: CarMarkEntity? = dao.getOneCarMark(fkCarMark)
-        val model: CarModelEntity? = dao.getOneCarModel(fkCarModel)
-        val generation: CarGenerationEntity? = dao.getOneCarGeneration(fkCarGeneration)
-        return LastCarConfigurationModel(
-            fkCarMark = mark?.idCarMark,
-            nameMark = mark?.carMarkName,
-            fkCarModel = model?.idCarModel,
-            nameModel = model?.carModelName,
-            fkCarGeneration = generation?.idCarGeneration,
-            nameGeneration = generation?.carGenerationName,
-            fkTypeFuel = fkTypeFuel,
-            engineVolume = engineVolume,
-            note = note
-        )
-    }
+    private fun LastCarConfigurationEntity?.toDomain(): LastCarConfigurationModel =
+        if (this == null) {
+            LastCarConfigurationModel()
+        } else {
+            LastCarConfigurationModel(
+                fkCarMark = fkCarMark,
+                nameMark = fkCarMark.let { dao.getOneCarMark(fkCarMark)?.carMarkName },
+                fkCarModel = fkCarModel,
+                nameModel = fkCarModel.let { dao.getOneCarModel(fkCarModel)?.carModelName },
+                fkCarGeneration = fkCarGeneration,
+                nameGeneration = fkCarGeneration.let { dao.getOneCarGeneration(fkCarGeneration)?.carGenerationName },
+                fkTypeFuel = fkTypeFuel,
+                engineVolume = engineVolume,
+                note = note
+            )
+        }
 
     private fun CarMarkEntity.toDomain() = CarMark(
         id = this.idCarMark,

@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
@@ -16,22 +17,18 @@ import kotlinx.coroutines.flow.flow
 class AppAccelerometerImpl(context: Context) : AppAccelerometer {
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) as Sensor
-
-    override fun stop(listener: SensorEventListener) {
-        sensorManager.unregisterListener(listener, accelerometer)
-    }
+    private val accelerometer =
+        sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) as Sensor
 
     @ExperimentalCoroutinesApi
     override fun streamEvents(): Flow<SensorEvent> = callbackFlow {
+
         val listener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent?) {
                 offer(event)
             }
 
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-                TODO("Not yet implemented")
-            }
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
 
         sensorManager.registerListener(
@@ -44,5 +41,4 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
             sensorManager.unregisterListener(listener, accelerometer)
         }
     }
-
 }

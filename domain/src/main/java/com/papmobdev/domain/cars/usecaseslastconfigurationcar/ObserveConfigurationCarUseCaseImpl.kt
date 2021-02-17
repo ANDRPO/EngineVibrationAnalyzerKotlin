@@ -17,7 +17,7 @@ class ObserveConfigurationCarUseCaseImpl(
         }
     } catch (e: Exception) {
         flow {
-            Result.success(LastCarConfigurationModel.empty())
+            Result.success(LastCarConfigurationModel())
         }
     }
 }

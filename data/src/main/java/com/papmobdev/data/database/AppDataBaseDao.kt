@@ -23,7 +23,7 @@ interface AppDataBaseDao {
     fun getTypesFuel(): List<CarTypeFuel>
 
     @Query("SELECT * FROM last_car_configuration")
-    fun getLastConfiguration(): Flow<LastCarConfigurationEntity>
+    fun getLastConfiguration(): Flow<LastCarConfigurationEntity?>
 
     @Query("SELECT * FROM car_mark WHERE id_car_mark = :idCarMark")
     fun getOneCarMark(idCarMark: Int?): CarMarkEntity?
