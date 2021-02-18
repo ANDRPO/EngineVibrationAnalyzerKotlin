@@ -1,7 +1,10 @@
 package com.papmobdev.data.database
 
-import android.util.Log
-import com.papmobdev.data.database.entities.*
+import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
+import com.papmobdev.data.database.entities.options.CarGenerationEntity
+import com.papmobdev.data.database.entities.options.CarMarkEntity
+import com.papmobdev.data.database.entities.options.CarModelEntity
+import com.papmobdev.data.database.entities.options.CarTypeFuel
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.*
 import kotlinx.coroutines.Dispatchers
@@ -26,13 +29,13 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
         it.toDomain()
     }
 
-    override fun getLastCarConfiguration(): Flow<LastCarConfigurationModel> =
+    override fun getLastCarConfiguration(): Flow<CarConfigurationModel> =
         dao.getLastConfiguration().map {
             it.toDomain()
         }.flowOn(Dispatchers.IO)
 
 
-    override fun updateLastCarConfiguration(newConfiguration: LastCarConfigurationModel): Boolean {
+    override fun updateLastCarConfiguration(newConfiguration: CarConfigurationModel): Boolean {
         val pushConfiguration = LastCarConfigurationEntity(
             idConfiguration = 1,
             fkCarMark = newConfiguration.fkCarMark,
@@ -51,11 +54,11 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
 
     }
 
-    private fun LastCarConfigurationEntity?.toDomain(): LastCarConfigurationModel =
+    private fun LastCarConfigurationEntity?.toDomain(): CarConfigurationModel =
         if (this == null) {
-            LastCarConfigurationModel()
+            CarConfigurationModel()
         } else {
-            LastCarConfigurationModel(
+            CarConfigurationModel(
                 fkCarMark = fkCarMark,
                 nameMark = fkCarMark.let { dao.getOneCarMark(fkCarMark)?.carMarkName },
                 fkCarModel = fkCarModel,

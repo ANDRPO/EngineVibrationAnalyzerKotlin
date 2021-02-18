@@ -11,7 +11,7 @@
 
         <variable
             name="configuration"
-            type="com.papmobdev.domain.cars.models.LastCarConfigurationModel" />
+            type="com.papmobdev.domain.cars.models.CarConfigurationModel" />
 
     </data>
 

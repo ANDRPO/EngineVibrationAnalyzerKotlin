@@ -6,7 +6,7 @@ import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.CarModel
-import com.papmobdev.domain.cars.models.LastCarConfigurationModel
+import com.papmobdev.domain.cars.models.CarConfigurationModel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
@@ -40,7 +40,7 @@ class CarParameterListViewModel(
 
     lateinit var carOptionsCar: CodeOptionsCar
 
-    private lateinit var lastCarConfiguration: LastCarConfigurationModel
+    private lateinit var carConfiguration: CarConfigurationModel
 
     private fun getMarks(): LiveData<Result<List<CarMark>>> =
         getMarksUseCase().asLiveData()
@@ -51,7 +51,7 @@ class CarParameterListViewModel(
     private fun getGenerations(id: Int): LiveData<Result<List<CarGeneration>>> =
         getGenerationsUseCase(id).asLiveData()
 
-    private fun getLastConfiguration(): LiveData<Result<LastCarConfigurationModel>> =
+    private fun getLastConfiguration(): LiveData<Result<CarConfigurationModel>> =
         observeConfigurationCarUseCase().asLiveData()
 
     private val _showErrorMessage = MutableLiveData<String>()
@@ -62,7 +62,7 @@ class CarParameterListViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getLastConfiguration().asFlow().collect { result ->
                 result.onSuccess {
-                    lastCarConfiguration = it
+                    carConfiguration = it
                     getList(typeOption)
                 }
             }
@@ -77,7 +77,7 @@ class CarParameterListViewModel(
                 }
             }
 
-            CodeOptionsCar.MODEL -> lastCarConfiguration.fkCarMark?.let { id ->
+            CodeOptionsCar.MODEL -> carConfiguration.fkCarMark?.let { id ->
                 getModels(id).asFlow()
                     .collect { result ->
                         result.onSuccess {
@@ -86,7 +86,7 @@ class CarParameterListViewModel(
                     }
             }
 
-            CodeOptionsCar.GENERATION -> lastCarConfiguration.fkCarModel?.let { id ->
+            CodeOptionsCar.GENERATION -> carConfiguration.fkCarModel?.let { id ->
                 getGenerations(id).asFlow()
                     .collect { result ->
                         result.onSuccess {
@@ -144,31 +144,31 @@ class CarParameterListViewModel(
 
     fun updateConfiguration(typeOption: CodeOptionsCar, item: OptionsModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            var newCarConfiguration: LastCarConfigurationModel? = null
+            var newCarConfiguration: CarConfigurationModel? = null
             when (typeOption) {
                 CodeOptionsCar.MARK -> {
-                    if (lastCarConfiguration.fkCarMark != item.id)
-                        newCarConfiguration = LastCarConfigurationModel(
+                    if (carConfiguration.fkCarMark != item.id)
+                        newCarConfiguration = CarConfigurationModel(
                             fkCarMark = item.id,
                             nameMark = item.name
                         )
                 }
                 CodeOptionsCar.MODEL -> {
-                    if (lastCarConfiguration.fkCarModel != item.id)
-                        newCarConfiguration = LastCarConfigurationModel(
-                            fkCarMark = lastCarConfiguration.fkCarMark,
-                            nameMark = lastCarConfiguration.nameMark,
+                    if (carConfiguration.fkCarModel != item.id)
+                        newCarConfiguration = CarConfigurationModel(
+                            fkCarMark = carConfiguration.fkCarMark,
+                            nameMark = carConfiguration.nameMark,
                             fkCarModel = item.id,
                             nameModel = item.name
                         )
                 }
                 CodeOptionsCar.GENERATION -> {
-                    if (lastCarConfiguration.fkCarGeneration != item.id)
-                        newCarConfiguration = LastCarConfigurationModel(
-                            fkCarMark = lastCarConfiguration.fkCarMark,
-                            nameMark = lastCarConfiguration.nameMark,
-                            fkCarModel = lastCarConfiguration.fkCarModel,
-                            nameModel = lastCarConfiguration.nameModel,
+                    if (carConfiguration.fkCarGeneration != item.id)
+                        newCarConfiguration = CarConfigurationModel(
+                            fkCarMark = carConfiguration.fkCarMark,
+                            nameMark = carConfiguration.nameMark,
+                            fkCarModel = carConfiguration.fkCarModel,
+                            nameModel = carConfiguration.nameModel,
                             fkCarGeneration = item.id,
                             nameGeneration = item.name,
                         )
@@ -176,9 +176,9 @@ class CarParameterListViewModel(
             }
             if (newCarConfiguration != null) {
                 newCarConfiguration.apply {
-                    fkTypeFuel = lastCarConfiguration.fkTypeFuel
-                    engineVolume = lastCarConfiguration.engineVolume
-                    note = lastCarConfiguration.note
+                    fkTypeFuel = carConfiguration.fkTypeFuel
+                    engineVolume = carConfiguration.engineVolume
+                    note = carConfiguration.note
                 }
                 updateConfigurationCarUseCase.execute(newCarConfiguration).collect { result ->
                     result.onSuccess {

@@ -1,7 +1,7 @@
 package com.papmobdev.domain.cars.usecaseslastconfigurationcar
 
 import com.papmobdev.domain.cars.CarsDataSource
-import com.papmobdev.domain.cars.models.LastCarConfigurationModel
+import com.papmobdev.domain.cars.models.CarConfigurationModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.map
 class ObserveConfigurationCarUseCaseImpl(
     private val carsDataSource: CarsDataSource
 ) : ObserveConfigurationCarUseCase {
-    override fun execute(): Flow<Result<LastCarConfigurationModel>> = try {
+    override fun execute(): Flow<Result<CarConfigurationModel>> = try {
         carsDataSource.getLastCarConfiguration().map {
             Result.success(it)
         }
     } catch (e: Exception) {
         flow {
-            Result.success(LastCarConfigurationModel())
+            Result.success(CarConfigurationModel())
         }
     }
 }

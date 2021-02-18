@@ -4,7 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.papmobdev.data.database.entities.*
+import com.papmobdev.data.database.entities.diagnostic.DiagnosticsEntity
+import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
+import com.papmobdev.data.database.entities.diagnostic.SensorEventEntity
+import com.papmobdev.data.database.entities.options.CarGenerationEntity
+import com.papmobdev.data.database.entities.options.CarMarkEntity
+import com.papmobdev.data.database.entities.options.CarModelEntity
+import com.papmobdev.data.database.entities.options.CarTypeFuel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -37,4 +43,9 @@ interface AppDataBaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateLastConfiguration(lastCarConfigurationEntity: LastCarConfigurationEntity)
 
+    @Insert
+    fun insertDiagnostic(diagnosticsEntity: DiagnosticsEntity)
+
+    @Insert
+    fun insertSensorEvents(listEvents: List<SensorEventEntity>)
 }

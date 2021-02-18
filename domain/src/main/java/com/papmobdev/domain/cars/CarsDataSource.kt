@@ -9,6 +9,6 @@ interface CarsDataSource {
     fun getGenerations(idModel: Int): List<CarGeneration>
     fun getTypesFuel(): List<TypeFuel>
 
-    fun getLastCarConfiguration(): Flow<LastCarConfigurationModel>
-    fun updateLastCarConfiguration(lastCarConfigurationModel: LastCarConfigurationModel): Boolean
+    fun getLastCarConfiguration(): Flow<CarConfigurationModel>
+    fun updateLastCarConfiguration(carConfigurationModel: CarConfigurationModel): Boolean
 }

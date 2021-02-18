@@ -2,9 +2,14 @@ package com.papmobdev.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.papmobdev.data.database.entities.*
+import com.papmobdev.data.database.entities.diagnostic.DiagnosticDetailEntity
+import com.papmobdev.data.database.entities.diagnostic.DiagnosticsEntity
+import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
+import com.papmobdev.data.database.entities.options.CarGenerationEntity
+import com.papmobdev.data.database.entities.options.CarMarkEntity
+import com.papmobdev.data.database.entities.options.CarModelEntity
+import com.papmobdev.data.database.entities.options.CarTypeFuel
 import com.papmobdev.data.database.typeconverters.DiagnosticsTypeConverter
 
 @Database(
@@ -15,6 +20,7 @@ import com.papmobdev.data.database.typeconverters.DiagnosticsTypeConverter
         LastCarConfigurationEntity::class,
         CarTypeFuel::class,
         DiagnosticsEntity::class],
+    views = [DiagnosticDetailEntity::class],
     version = 1,
     exportSchema = true
 )

@@ -2,7 +2,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.sel
 
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
-import com.papmobdev.domain.cars.models.LastCarConfigurationModel
+import com.papmobdev.domain.cars.models.CarConfigurationModel
 import com.papmobdev.domain.cars.models.TypeFuel
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
@@ -21,7 +21,7 @@ class SelectCarViewModel(
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase,
 ) : ViewModel() {
 
-    val liveDataConfiguration: LiveData<Result<LastCarConfigurationModel>> =
+    val liveDataConfiguration: LiveData<Result<CarConfigurationModel>> =
         observeConfigurationCarUseCase.execute().asLiveData()
 
     val liveDataTypesFuelList: LiveData<Result<List<TypeFuel>>> = getTypesFuelUseCase().asLiveData()
