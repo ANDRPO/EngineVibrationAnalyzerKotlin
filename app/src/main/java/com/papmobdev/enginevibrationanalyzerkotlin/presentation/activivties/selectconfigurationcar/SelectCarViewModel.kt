@@ -1,6 +1,5 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.LastCarConfigurationModel
@@ -10,9 +9,7 @@ import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCase
-import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCase
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collect
 
 @ExperimentalCoroutinesApi
@@ -22,7 +19,6 @@ class SelectCarViewModel(
     observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
     getTypesFuelUseCase: GetTypesFuelUseCase,
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase,
-    private val observeSensorUseCase: ObserveSensorUseCase
 ) : ViewModel() {
 
     val liveDataConfiguration: LiveData<Result<LastCarConfigurationModel>> =

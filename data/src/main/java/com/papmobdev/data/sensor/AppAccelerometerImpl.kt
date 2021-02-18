@@ -5,14 +5,16 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.camera2.params.Capability
 import android.util.Log
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class AppAccelerometerImpl(context: Context) : AppAccelerometer {
 
@@ -20,25 +22,36 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
     private val accelerometer =
         sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) as Sensor
 
-    @ExperimentalCoroutinesApi
-    override fun streamEvents(): Flow<SensorEvent> = callbackFlow {
+    private val _events = MutableSharedFlow<SensorEvent>(
+        replay = 0,
+        extraBufferCapacity = 1000,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val events = _events.asSharedFlow()
 
-        val listener = object : SensorEventListener {
-            override fun onSensorChanged(event: SensorEvent?) {
-                offer(event)
+    private val listener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event != null) {
+                _events.tryEmit(event)
             }
-
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
 
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
+
+    override fun start() {
         sensorManager.registerListener(
             listener,
             accelerometer,
             SensorManager.SENSOR_DELAY_FASTEST
         )
+    }
 
-        awaitClose {
-            sensorManager.unregisterListener(listener, accelerometer)
-        }
+
+    @ExperimentalCoroutinesApi
+    override fun streamEvents(): Flow<SensorEvent> = events
+
+    override fun stop() {
+        sensorManager.unregisterListener(listener, accelerometer)
     }
 }

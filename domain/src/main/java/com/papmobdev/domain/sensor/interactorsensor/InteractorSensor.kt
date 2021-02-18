@@ -1,10 +1,10 @@
-package com.papmobdev.domain.sensor
+package com.papmobdev.domain.sensor.interactorsensor
 
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.flow.Flow
 
-interface SensorDataSource {
+interface InteractorSensor {
+    fun streamEvent(): Flow<EventModel>
     fun startSensor()
-    fun getStreamEvents(): Flow<EventModel>
     fun stopSensor()
 }

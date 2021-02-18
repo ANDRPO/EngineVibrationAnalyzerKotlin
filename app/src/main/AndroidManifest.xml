@@ -10,8 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EngineVibrationAnalyzerKotlin">
-        <activity android:name=".presentation.selectcar.CarParameterListActivity" />
-        <activity android:name=".presentation.selectcar.SelectCarActivity">
+        <activity android:name=".presentation.activivties.selectconfigurationcar.SelectVibrationSourceActivity"></activity>
+        <activity android:name=".presentation.activivties.diagnostic.ManualActivivty" />
+        <activity android:name=".presentation.activivties.selectconfigurationcar.CarParameterListActivity" />
+        <activity android:name=".presentation.activivties.selectconfigurationcar.SelectCarActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

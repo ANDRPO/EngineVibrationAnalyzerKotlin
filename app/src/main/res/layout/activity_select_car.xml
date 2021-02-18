@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar.SelectCarViewModel" />
+            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar.SelectCarViewModel" />
 
         <variable
             name="configuration"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
-        tools:context=".presentation.selectcar.SelectCarActivity">
+        tools:context=".presentation.activivties.selectconfigurationcar.SelectCarActivity">
 
         <TextView
             android:id="@+id/textViewSelectCarsOptions"
@@ -144,18 +144,17 @@
             android:id="@+id/buttonNext"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:layout_marginTop="32dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="Далее"
             android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/secondaryText"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.837"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextInputNote" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

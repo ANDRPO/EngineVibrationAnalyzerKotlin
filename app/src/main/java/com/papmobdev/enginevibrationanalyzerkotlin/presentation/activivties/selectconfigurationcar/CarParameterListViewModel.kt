@@ -1,4 +1,4 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
 import androidx.databinding.adapters.TextViewBindingAdapter
 import androidx.lifecycle.*

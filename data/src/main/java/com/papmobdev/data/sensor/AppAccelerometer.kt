@@ -5,5 +5,7 @@ import android.hardware.SensorEventListener
 import kotlinx.coroutines.flow.Flow
 
 interface AppAccelerometer {
+    fun start()
     fun streamEvents(): Flow<SensorEvent>
+    fun stop()
 }

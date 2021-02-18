@@ -1,4 +1,4 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCarBinding
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.ManualActivivty
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_select_car.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -129,6 +130,9 @@ class SelectCarActivity : BaseActivity() {
             if (generationCheckSelection()) {
                 openCarParameterList(CodeOptionsCar.GENERATION)
             }
+        }
+        binding.buttonNext.setOnClickListener {
+            ManualActivivty.start(this)
         }
     }
 

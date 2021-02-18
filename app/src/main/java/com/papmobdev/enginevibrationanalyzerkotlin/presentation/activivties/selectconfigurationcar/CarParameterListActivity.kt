@@ -1,4 +1,4 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
 import android.annotation.SuppressLint
 import android.content.Context

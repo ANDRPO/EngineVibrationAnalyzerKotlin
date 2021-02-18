@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.selectcar.CarParameterListViewModel" />
+            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar.CarParameterListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.selectcar.CarParameterListActivity">
+        tools:context=".presentation.activivties.selectconfigurationcar.CarParameterListActivity">
 
         <EditText
             android:id="@+id/searchCarList"
@@ -35,13 +35,13 @@
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
             android:text="Список пуст"
             android:textAlignment="center"
-            android:visibility="gone"
-            app:layout_constraintVertical_bias="0.25"
             android:textSize="@dimen/secondaryText"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchCarList" />
+            app:layout_constraintTop_toBottomOf="@+id/searchCarList"
+            app:layout_constraintVertical_bias="0.25" />
 
         <View
             android:layout_width="match_parent"

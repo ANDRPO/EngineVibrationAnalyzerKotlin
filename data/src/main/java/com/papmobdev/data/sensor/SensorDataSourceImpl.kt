@@ -9,9 +9,13 @@ import kotlinx.coroutines.flow.map
 class SensorDataSourceImpl(
     private val appAccelerometer: AppAccelerometer
 ) : SensorDataSource {
+    override fun startSensor() = appAccelerometer.start()
+
     override fun getStreamEvents(): Flow<EventModel> = appAccelerometer.streamEvents().map {
         it.toDomain()
     }
+
+    override fun stopSensor() = appAccelerometer.stop()
 
     private fun SensorEvent.toDomain(): EventModel = EventModel(
         id = null,
