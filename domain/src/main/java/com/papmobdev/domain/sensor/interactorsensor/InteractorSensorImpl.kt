@@ -5,6 +5,7 @@ import com.papmobdev.domain.sensor.models.EventModel
 import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
 @ExperimentalCoroutinesApi
 class InteractorSensorImpl(

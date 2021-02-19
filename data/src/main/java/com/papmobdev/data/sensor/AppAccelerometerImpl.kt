@@ -23,9 +23,9 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
         sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) as Sensor
 
     private val _events = MutableSharedFlow<SensorEvent>(
-        replay = 0,
+        replay = 100,
         extraBufferCapacity = 1000,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        onBufferOverflow = BufferOverflow.SUSPEND
     )
     private val events = _events.asSharedFlow()
 

@@ -7,10 +7,7 @@ import androidx.room.Query
 import com.papmobdev.data.database.entities.diagnostic.DiagnosticsEntity
 import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
 import com.papmobdev.data.database.entities.diagnostic.SensorEventEntity
-import com.papmobdev.data.database.entities.options.CarGenerationEntity
-import com.papmobdev.data.database.entities.options.CarMarkEntity
-import com.papmobdev.data.database.entities.options.CarModelEntity
-import com.papmobdev.data.database.entities.options.CarTypeFuel
+import com.papmobdev.data.database.entities.options.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,6 +21,9 @@ interface AppDataBaseDao {
 
     @Query("SELECT * FROM car_generation WHERE fk_car_model = :idCarModel")
     fun getCarGenerations(idCarModel: Int): List<CarGenerationEntity>
+
+    @Query("SELECT * FROM car_vibration_source")
+    fun getTypesVibrationSource(): List<CarVibrationSource>
 
     @Query("SELECT * FROM types_fuel")
     fun getTypesFuel(): List<CarTypeFuel>

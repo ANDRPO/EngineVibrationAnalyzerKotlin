@@ -1,6 +1,5 @@
 package com.papmobdev.domain.diagnostic
 
-import com.papmobdev.domain.cars.models.CarConfigurationModel
 import com.papmobdev.domain.diagnostic.models.DiagnosticModel
 import com.papmobdev.domain.sensor.models.EventModel
 

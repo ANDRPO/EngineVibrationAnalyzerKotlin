@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCarBinding
-import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.ManualActivivty
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.ManualActivity
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_select_car.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -105,6 +105,38 @@ class SelectCarActivity : BaseActivity() {
             }
             )
 
+            liveDataTypeSourceList.observe(this@SelectCarActivity, { result ->
+                result.onSuccess { list ->
+                    val adapter = ArrayAdapter(
+                        this@SelectCarActivity,
+                        R.layout.spinner_item,
+                        list.map { it.nameSource }
+                    )
+
+                    binding.spinnerSourceVibration.apply {
+                        this.adapter = adapter
+                        onItemSelectedListener =
+                            object : OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>?,
+                                    view: View?,
+                                    position: Int,
+                                    id: Long
+                                ) {
+                                    viewModel.updateVibrationSourceConfiguration(
+                                        list [position].idSource ?: 1
+                                    )
+                                }
+
+                                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                            }
+                    }
+                }
+                result.onFailure {
+                    showToastMissingFollowingListOptions("Не удалось загрузить список источников вибрации")
+                }
+            })
+
             showErrorMessage.observe(this@SelectCarActivity, {
                 showToastMissingFollowingListOptions(it)
             })
@@ -132,7 +164,7 @@ class SelectCarActivity : BaseActivity() {
             }
         }
         binding.buttonNext.setOnClickListener {
-            ManualActivivty.start(this)
+            ManualActivity.start(this)
         }
     }
 

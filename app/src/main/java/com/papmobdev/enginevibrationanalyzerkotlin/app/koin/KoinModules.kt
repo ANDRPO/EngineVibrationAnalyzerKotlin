@@ -3,10 +3,12 @@ package com.papmobdev.enginevibrationanalyzerkotlin.app.koin
 import com.papmobdev.data.database.AppDataBase
 import com.papmobdev.data.database.AppDataBaseInstance
 import com.papmobdev.data.database.CarsDataSourceImpl
+import com.papmobdev.data.database.DiagnosticDataSourceImpl
 import com.papmobdev.data.sensor.AppAccelerometer
 import com.papmobdev.data.sensor.AppAccelerometerImpl
 import com.papmobdev.data.sensor.SensorDataSourceImpl
 import com.papmobdev.domain.cars.CarsDataSource
+import com.papmobdev.domain.cars.InteractorCars
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCaseImpl
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
@@ -19,7 +21,16 @@ import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfiguratio
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCaseImpl
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCase
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCaseImpl
+import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCase
+import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCaseImpl
+import com.papmobdev.domain.diagnostic.DiagnosticDataSource
+import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCase
+import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCaseImpl
+import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCase
+import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCaseImpl
 import com.papmobdev.domain.sensor.SensorDataSource
+import com.papmobdev.domain.sensor.interactorsensor.InteractorSensor
+import com.papmobdev.domain.sensor.interactorsensor.InteractorSensorImpl
 import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCase
 import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCaseImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,6 +57,9 @@ object KoinModules {
         single<SensorDataSource> {
             SensorDataSourceImpl(get())
         }
+        factory<DiagnosticDataSource> {
+            DiagnosticDataSourceImpl(get())
+        }
     }
 
     private val useCaseModule = module {
@@ -69,6 +83,11 @@ object KoinModules {
                 get()
             )
         }
+        factory<GetVibrationSourceUseCase> {
+            GetVibrationSourceUseCaseImpl(
+                get()
+            )
+        }
         factory<GetTypesFuelUseCase> {
             GetTypesFuelUseCaseImpl(
                 get()
@@ -79,9 +98,27 @@ object KoinModules {
                 get()
             )
         }
+        factory<SendDiagnosticUseCase> {
+            SendDiagnosticUseCaseImpl(
+                get()
+            )
+        }
+        factory<SendListSensorEventsUseCase> {
+            SendListSensorEventsUseCaseImpl(
+                get()
+            )
+        }
         single<ObserveSensorUseCase> {
             ObserveSensorUseCaseImpl(
                 get()
+            )
+        }
+    }
+
+    private val interactorsModule = module {
+        factory<InteractorSensor> {
+            InteractorSensorImpl(
+                get(), get()
             )
         }
     }
@@ -92,6 +129,7 @@ object KoinModules {
                 carsDataBaseModule,
                 sensorModule,
                 dataSourceModule,
+                interactorsModule,
                 useCaseModule
             )
         )

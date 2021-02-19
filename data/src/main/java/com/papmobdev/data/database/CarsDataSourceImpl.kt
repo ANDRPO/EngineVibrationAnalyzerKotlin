@@ -1,10 +1,7 @@
 package com.papmobdev.data.database
 
 import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
-import com.papmobdev.data.database.entities.options.CarGenerationEntity
-import com.papmobdev.data.database.entities.options.CarMarkEntity
-import com.papmobdev.data.database.entities.options.CarModelEntity
-import com.papmobdev.data.database.entities.options.CarTypeFuel
+import com.papmobdev.data.database.entities.options.*
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.*
 import kotlinx.coroutines.Dispatchers
@@ -25,17 +22,21 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
         it.toDomain()
     }
 
+    override fun getVibrationSource(): List<VibrationSource> = dao.getTypesVibrationSource().map {
+        it.toDomain()
+    }
+
     override fun getTypesFuel(): List<TypeFuel> = dao.getTypesFuel().map {
         it.toDomain()
     }
 
-    override fun getLastCarConfiguration(): Flow<CarConfigurationModel> =
+    override fun getLastCarConfiguration(): Flow<CarConfiguration> =
         dao.getLastConfiguration().map {
             it.toDomain()
         }.flowOn(Dispatchers.IO)
 
 
-    override fun updateLastCarConfiguration(newConfiguration: CarConfigurationModel): Boolean {
+    override fun updateLastCarConfiguration(newConfiguration: CarConfiguration): Boolean {
         val pushConfiguration = LastCarConfigurationEntity(
             idConfiguration = 1,
             fkCarMark = newConfiguration.fkCarMark,
@@ -43,7 +44,8 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
             fkCarGeneration = newConfiguration.fkCarGeneration,
             fkTypeFuel = newConfiguration.fkTypeFuel,
             engineVolume = newConfiguration.engineVolume,
-            note = newConfiguration.note
+            note = newConfiguration.note,
+            fkVibrationSource = newConfiguration.fkTypeSource
         )
         return try {
             dao.updateLastConfiguration(pushConfiguration)
@@ -54,11 +56,11 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
 
     }
 
-    private fun LastCarConfigurationEntity?.toDomain(): CarConfigurationModel =
+    private fun LastCarConfigurationEntity?.toDomain(): CarConfiguration =
         if (this == null) {
-            CarConfigurationModel()
+            CarConfiguration()
         } else {
-            CarConfigurationModel(
+            CarConfiguration(
                 fkCarMark = fkCarMark,
                 nameMark = fkCarMark.let { dao.getOneCarMark(fkCarMark)?.carMarkName },
                 fkCarModel = fkCarModel,
@@ -67,7 +69,8 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
                 nameGeneration = fkCarGeneration.let { dao.getOneCarGeneration(fkCarGeneration)?.carGenerationName },
                 fkTypeFuel = fkTypeFuel,
                 engineVolume = engineVolume,
-                note = note
+                note = note,
+                fkTypeSource = fkVibrationSource
             )
         }
 
@@ -84,6 +87,11 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
     private fun CarGenerationEntity.toDomain() = CarGeneration(
         id = this.idCarGeneration,
         name = this.carGenerationName
+    )
+
+    private fun CarVibrationSource.toDomain() = VibrationSource(
+        idSource = this.idSource,
+        nameSource = this.nameSource
     )
 
     private fun CarTypeFuel.toDomain() = TypeFuel(

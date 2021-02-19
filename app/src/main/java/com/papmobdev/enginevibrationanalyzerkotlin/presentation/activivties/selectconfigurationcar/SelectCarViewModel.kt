@@ -1,14 +1,17 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
-import com.papmobdev.domain.cars.models.CarConfigurationModel
+import com.papmobdev.domain.cars.models.CarConfiguration
 import com.papmobdev.domain.cars.models.TypeFuel
+import com.papmobdev.domain.cars.models.VibrationSource
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCase
+import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 
@@ -18,13 +21,18 @@ class SelectCarViewModel(
     private val getGenerationsUseCase: GetGenerationsUseCase,
     observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
     getTypesFuelUseCase: GetTypesFuelUseCase,
+    private val getVibrationSourceUseCase: GetVibrationSourceUseCase,
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase,
 ) : ViewModel() {
 
-    val liveDataConfiguration: LiveData<Result<CarConfigurationModel>> =
-        observeConfigurationCarUseCase.execute().asLiveData()
+    val liveDataConfiguration: LiveData<Result<CarConfiguration>> =
+        observeConfigurationCarUseCase().asLiveData()
 
-    val liveDataTypesFuelList: LiveData<Result<List<TypeFuel>>> = getTypesFuelUseCase().asLiveData()
+    val liveDataTypesFuelList: LiveData<Result<List<TypeFuel>>> =
+        getTypesFuelUseCase().asLiveData()
+
+    val liveDataTypeSourceList: LiveData<Result<List<VibrationSource>>> =
+        getVibrationSourceUseCase().asLiveData()
 
     private val _showErrorMessage = MutableLiveData<String>()
     val showErrorMessage = _showErrorMessage
@@ -61,6 +69,17 @@ class SelectCarViewModel(
             if (configuration != null) {
                 configuration.engineVolume =
                     if (!value.isNullOrEmpty()) value.toDouble() else null
+                updateConfigurationCarUseCase.execute(configuration).collect()
+            }
+        }
+    }
+
+    fun updateVibrationSourceConfiguration(fkSource: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val configuration = liveDataConfiguration.value?.getOrNull()
+            if (configuration != null) {
+                configuration.fkTypeSource = fkSource
+                Log.d("configurationfksource", fkSource.toString())
                 updateConfigurationCarUseCase.execute(configuration).collect()
             }
         }

@@ -6,7 +6,7 @@ import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.CarModel
-import com.papmobdev.domain.cars.models.CarConfigurationModel
+import com.papmobdev.domain.cars.models.CarConfiguration
 import com.papmobdev.domain.cars.usecasecargeneration.GetGenerationsUseCase
 import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
@@ -40,7 +40,7 @@ class CarParameterListViewModel(
 
     lateinit var carOptionsCar: CodeOptionsCar
 
-    private lateinit var carConfiguration: CarConfigurationModel
+    private lateinit var carConfiguration: CarConfiguration
 
     private fun getMarks(): LiveData<Result<List<CarMark>>> =
         getMarksUseCase().asLiveData()
@@ -51,7 +51,7 @@ class CarParameterListViewModel(
     private fun getGenerations(id: Int): LiveData<Result<List<CarGeneration>>> =
         getGenerationsUseCase(id).asLiveData()
 
-    private fun getLastConfiguration(): LiveData<Result<CarConfigurationModel>> =
+    private fun getLastConfiguration(): LiveData<Result<CarConfiguration>> =
         observeConfigurationCarUseCase().asLiveData()
 
     private val _showErrorMessage = MutableLiveData<String>()
@@ -144,18 +144,18 @@ class CarParameterListViewModel(
 
     fun updateConfiguration(typeOption: CodeOptionsCar, item: OptionsModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            var newCarConfiguration: CarConfigurationModel? = null
+            var newCarConfiguration: CarConfiguration? = null
             when (typeOption) {
                 CodeOptionsCar.MARK -> {
                     if (carConfiguration.fkCarMark != item.id)
-                        newCarConfiguration = CarConfigurationModel(
+                        newCarConfiguration = CarConfiguration(
                             fkCarMark = item.id,
                             nameMark = item.name
                         )
                 }
                 CodeOptionsCar.MODEL -> {
                     if (carConfiguration.fkCarModel != item.id)
-                        newCarConfiguration = CarConfigurationModel(
+                        newCarConfiguration = CarConfiguration(
                             fkCarMark = carConfiguration.fkCarMark,
                             nameMark = carConfiguration.nameMark,
                             fkCarModel = item.id,
@@ -164,7 +164,7 @@ class CarParameterListViewModel(
                 }
                 CodeOptionsCar.GENERATION -> {
                     if (carConfiguration.fkCarGeneration != item.id)
-                        newCarConfiguration = CarConfigurationModel(
+                        newCarConfiguration = CarConfiguration(
                             fkCarMark = carConfiguration.fkCarMark,
                             nameMark = carConfiguration.nameMark,
                             fkCarModel = carConfiguration.fkCarModel,
