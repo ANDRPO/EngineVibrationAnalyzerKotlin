@@ -1,7 +1,7 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.app.koin
 
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.DiagnosticViewModel
-import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.ManualViewModel
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual.ManualViewModel
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar.CarParameterListViewModel
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar.SelectCarViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,8 +24,9 @@ internal val manualActivityModule = module {
     viewModel { ManualViewModel(get()) }
 }
 
+@ExperimentalCoroutinesApi
 internal val diagnosticActivityModule = module {
-    viewModel { DiagnosticViewModel(get(), get(), get()) }
+    viewModel { DiagnosticViewModel(get(), get(), get(), get()) }
 }
 
 @ExperimentalCoroutinesApi

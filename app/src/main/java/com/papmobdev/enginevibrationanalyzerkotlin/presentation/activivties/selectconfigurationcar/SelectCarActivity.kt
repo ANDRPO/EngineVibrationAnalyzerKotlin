@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCarBinding
-import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.ManualActivity
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual.ManualActivity
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_select_car.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi

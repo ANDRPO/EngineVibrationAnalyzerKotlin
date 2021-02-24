@@ -1,10 +1,11 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityManualBinding
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.DiagnosticActivity
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel

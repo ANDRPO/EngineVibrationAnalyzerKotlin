@@ -1,4 +1,4 @@
-package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic
+package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

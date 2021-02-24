@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityDiagnosticBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
+import kotlinx.android.synthetic.main.activity_diagnostic.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,6 +30,26 @@ class DiagnosticActivity : BaseActivity() {
                 lifecycleOwner = this@DiagnosticActivity
                 viewModel = this@DiagnosticActivity.viewModel
             }
-        viewModel.startDiagnostic()
+        initClickListeners()
+        initObserve()
     }
+
+    private fun initObserve() {
+        viewModel.apply {
+            time.observe(this@DiagnosticActivity, {
+                binding.timerOutput.text = it
+            })
+            titleNotify.observe(this@DiagnosticActivity, {
+                binding.textViewMessage.text = it
+            })
+        }
+    }
+
+    private fun initClickListeners() {
+        controlTest.setOnClickListener {
+            viewModel.startDiagnostic()
+        }
+    }
+
+
 }

@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EngineVibrationAnalyzerKotlin">
         <activity android:name=".presentation.activivties.diagnostic.DiagnosticActivity"></activity>
-        <activity android:name=".presentation.activivties.diagnostic.ManualActivity" />
+        <activity android:name=".presentation.activivties.manual.ManualActivity" />
         <activity android:name=".presentation.activivties.selectconfigurationcar.CarParameterListActivity" />
         <activity android:name=".presentation.activivties.selectconfigurationcar.SelectCarActivity">
             <intent-filter>

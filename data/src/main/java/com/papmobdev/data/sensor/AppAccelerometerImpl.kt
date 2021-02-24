@@ -27,6 +27,7 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
         extraBufferCapacity = 1000,
         onBufferOverflow = BufferOverflow.SUSPEND
     )
+
     private val events = _events.asSharedFlow()
 
     private val listener = object : SensorEventListener {
@@ -51,7 +52,6 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
     @ExperimentalCoroutinesApi
     override fun streamEvents(): Flow<SensorEvent> = events
 
-    override fun stop() {
-        sensorManager.unregisterListener(listener, accelerometer)
-    }
+    override fun stop() = sensorManager.unregisterListener(listener, accelerometer)
+
 }

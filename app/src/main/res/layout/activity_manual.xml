@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.ManualViewModel" />
+            type="com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual.ManualViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.activivties.diagnostic.ManualActivity">
+        tools:context=".presentation.activivties.manual.ManualActivity">
 
         <TextView
             android:id="@+id/textGuideImage"
