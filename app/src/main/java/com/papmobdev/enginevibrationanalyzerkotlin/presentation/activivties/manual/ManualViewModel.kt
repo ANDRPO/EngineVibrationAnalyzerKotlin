@@ -3,7 +3,6 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.man
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
-import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi

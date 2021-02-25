@@ -18,7 +18,6 @@ import com.papmobdev.data.database.typeconverters.DiagnosticsTypeConverter
         SensorEventEntity::class,
         CarVibrationSource::class,
         CarTypeFuel::class,
-
         DiagnosticsEntity::class],
     version = 1,
     exportSchema = true

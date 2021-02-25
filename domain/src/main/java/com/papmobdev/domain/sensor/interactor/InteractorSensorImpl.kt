@@ -1,18 +1,17 @@
-package com.papmobdev.domain.sensor.interactorsensor
+package com.papmobdev.domain.sensor.interactor
 
 import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.models.EventModel
-import com.papmobdev.domain.sensor.usecaseobservesensor.ObserveSensorUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 
 @ExperimentalCoroutinesApi
 class InteractorSensorImpl(
-    private val observeSensorUseCase: ObserveSensorUseCase,
     private val sensorDataSource: SensorDataSource
 ) : InteractorSensor {
-    override fun streamEvent(): Flow<EventModel> = observeSensorUseCase.execute()
+    override fun streamEvent(): Flow<EventModel> = sensorDataSource.getStreamEvents().flowOn(Dispatchers.Default)
 
     override fun startSensor() = sensorDataSource.startSensor()
 

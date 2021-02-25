@@ -6,6 +6,5 @@ import com.papmobdev.domain.sensor.models.EventModel
 interface DiagnosticDataSource {
     fun sendEvents(idDiagnostic: Int, list: List<EventModel>)
     fun sendDiagnostic(diagnostic: DiagnosticModel)
-    fun getListDiagnostic(): List<DiagnosticModel>
-    fun getListEvents(idDiagnostic: Int): List<EventModel>
+    fun getLastDiagnostic(): DiagnosticModel
 }

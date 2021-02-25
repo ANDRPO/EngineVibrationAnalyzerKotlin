@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AppDataBaseDao {
 
-    @Query("SELECT * FROM car_mark")
+    @Query("SELECT * FROM car_mark ORDER BY name ASC")
     fun getCarMarks(): List<CarMarkEntity>
 
-    @Query("SELECT * FROM car_model WHERE fk_car_mark = :idCarMark")
+    @Query("SELECT * FROM car_model WHERE fk_car_mark = :idCarMark ORDER BY name ASC")
     fun getCarModels(idCarMark: Int): List<CarModelEntity>
 
-    @Query("SELECT * FROM car_generation WHERE fk_car_model = :idCarModel")
+    @Query("SELECT * FROM car_generation WHERE fk_car_model = :idCarModel ORDER BY name ASC")
     fun getCarGenerations(idCarModel: Int): List<CarGenerationEntity>
 
     @Query("SELECT * FROM car_vibration_source")
@@ -40,12 +40,17 @@ interface AppDataBaseDao {
     @Query("SELECT * FROM car_generation WHERE id_car_generation = :idCarGeneration")
     fun getOneCarGeneration(idCarGeneration: Int?): CarGenerationEntity?
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateLastConfiguration(lastCarConfigurationEntity: LastCarConfigurationEntity)
+
 
     @Insert
     fun insertDiagnostic(diagnosticsEntity: DiagnosticsEntity)
 
     @Insert
     fun insertSensorEvents(listEvents: List<SensorEventEntity>)
+
+    @Query("SELECT * FROM diagnostic ORDER BY id_diagnostic DESC LIMIT 1")
+    fun getLastDiagnostic(): DiagnosticsEntity
 }

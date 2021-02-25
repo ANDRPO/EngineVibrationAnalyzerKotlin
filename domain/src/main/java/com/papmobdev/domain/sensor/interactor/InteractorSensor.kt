@@ -1,4 +1,4 @@
-package com.papmobdev.domain.sensor.interactorsensor
+package com.papmobdev.domain.sensor.interactor
 
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.flow.Flow

@@ -9,7 +9,7 @@ import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurati
 import com.papmobdev.domain.diagnostic.models.DiagnosticModel
 import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCase
 import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCase
-import com.papmobdev.domain.sensor.interactorsensor.InteractorSensor
+import com.papmobdev.domain.sensor.interactor.InteractorSensor
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -68,8 +68,11 @@ class DiagnosticViewModel(
     fun cancelDiagnostic() {
         preDiagnosticDownTimer.cancel()
         diagnosticDownTimer.cancel()
+
         interactorSensor.stopSensor()
+
         procedureReadEvents.cancel()
+
         _time.postValue("00:03")
         _titleNotify.postValue("До начала диагностики:")
         list.clear()

@@ -18,14 +18,7 @@ class DiagnosticDataSourceImpl(
     override fun sendDiagnostic(diagnostic: DiagnosticModel) =
         dao.insertDiagnostic(diagnostic.toData())
 
-
-    override fun getListDiagnostic(): List<DiagnosticModel> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getListEvents(idDiagnostic: Int): List<EventModel> {
-        TODO("Not yet implemented")
-    }
+    override fun getLastDiagnostic(): DiagnosticModel = dao.getLastDiagnostic().toDomain()
 
     private fun EventModel.toData(idDiagnostic: Int): SensorEventEntity = SensorEventEntity(
         idEvent = id,
@@ -37,6 +30,18 @@ class DiagnosticDataSourceImpl(
     )
 
     private fun DiagnosticModel.toData(): DiagnosticsEntity = DiagnosticsEntity(
+        idDiagnostic = idDiagnostic,
+        dateTime = dateTime,
+        fkCarMark = fkCarMark,
+        fkCarModel = fkCarModel,
+        fkCarGeneration = fkCarGeneration,
+        fkTypeFuel = fkTypeFuel,
+        engineVolume = engineVolume,
+        note = note,
+        fkVibrationSource = fkVibrationSource
+    )
+
+    private fun DiagnosticsEntity.toDomain() = DiagnosticModel(
         idDiagnostic = idDiagnostic,
         dateTime = dateTime,
         fkCarMark = fkCarMark,
