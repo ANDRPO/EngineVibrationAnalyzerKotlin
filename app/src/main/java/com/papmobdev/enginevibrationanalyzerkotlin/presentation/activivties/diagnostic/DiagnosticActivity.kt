@@ -3,6 +3,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.dia
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityDiagnosticBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
@@ -42,6 +43,9 @@ class DiagnosticActivity : BaseActivity() {
             titleNotify.observe(this@DiagnosticActivity, {
                 binding.textViewMessage.text = it
             })
+            showMessage.observe(this@DiagnosticActivity, {
+                showMessage(it)
+            })
         }
     }
 
@@ -50,6 +54,9 @@ class DiagnosticActivity : BaseActivity() {
             viewModel.startDiagnostic()
         }
     }
+
+    private fun showMessage(message: String) =
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
 
 }

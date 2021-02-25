@@ -89,6 +89,7 @@ class SelectCarActivity : BaseActivity() {
                                     position: Int,
                                     id: Long
                                 ) {
+                                    binding.root.requestFocus()
                                     viewModel.updateTypeFuelConfiguration(
                                         list[position].idFuel ?: 1
                                     )
@@ -123,6 +124,7 @@ class SelectCarActivity : BaseActivity() {
                                     position: Int,
                                     id: Long
                                 ) {
+                                    binding.root.requestFocus()
                                     viewModel.updateVibrationSourceConfiguration(
                                         list [position].idSource ?: 1
                                     )

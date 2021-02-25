@@ -6,9 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
+import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCase
 import com.papmobdev.domain.diagnostic.models.DiagnosticModel
-import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCase
-import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCase
 import com.papmobdev.domain.sensor.interactor.InteractorSensor
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,18 +17,18 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class DiagnosticViewModel(
     private val interactorSensor: InteractorSensor,
-    private val sendDiagnosticUseCase: SendDiagnosticUseCase,
-    private val sendListSensorEventsUseCase: SendListSensorEventsUseCase,
-    private val observeConfigurationCarUseCase: ObserveConfigurationCarUseCase
+    private val sendDiagnosticDataUseCase: SendDiagnosticDataUseCase,
 ) : ViewModel() {
 
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> = _time
 
     private val _titleNotify = MutableLiveData<String>()
-    val titleNotify = _titleNotify
+    val titleNotify: LiveData<String> = _titleNotify
 
-    private lateinit var diagnosticModel: DiagnosticModel
+    private val _showMessage = MutableLiveData<String>()
+    val showMessage: LiveData<String> = _showMessage
+
     private val list: MutableList<EventModel> = mutableListOf()
 
     private val preDiagnosticDownTimer = DiagnosticDownTimerProcedure(3000L,
@@ -52,6 +51,7 @@ class DiagnosticViewModel(
             _titleNotify.postValue("Тестирование завершено")
             interactorSensor.stopSensor()
             procedureReadEvents.cancel()
+            sendList(list)
         })
 
     private val procedureReadEvents = viewModelScope.launch {
@@ -78,21 +78,14 @@ class DiagnosticViewModel(
         list.clear()
     }
 
-    private fun sendDiagnostic() {
-        viewModelScope.launch {
-            var configuration: DiagnosticModel
-            observeConfigurationCarUseCase()
-          //  sendDiagnosticUseCase()
-
-
-
-        }
-       /* val diagnosticModel = DiagnosticModel(
-
-        )*/
-    }
-
     private fun sendList(list: List<EventModel>) {
+        viewModelScope.launch {
+            sendDiagnosticDataUseCase.writeDiagnostic(list).collect { result ->
+                result.onSuccess {
+                    if (!it) _showMessage.postValue("Произоршла ошибка при записи данных")
+                }
+            }
+        }
     }
 
     class DiagnosticDownTimerProcedure(

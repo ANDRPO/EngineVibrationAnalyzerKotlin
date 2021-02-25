@@ -21,7 +21,7 @@ class SelectCarViewModel(
     private val getGenerationsUseCase: GetGenerationsUseCase,
     observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
     getTypesFuelUseCase: GetTypesFuelUseCase,
-    private val getVibrationSourceUseCase: GetVibrationSourceUseCase,
+    getVibrationSourceUseCase: GetVibrationSourceUseCase,
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase,
 ) : ViewModel() {
 
@@ -69,7 +69,7 @@ class SelectCarViewModel(
             if (configuration != null) {
                 configuration.engineVolume =
                     if (!value.isNullOrEmpty()) value.toDouble() else null
-                updateConfigurationCarUseCase.execute(configuration).collect()
+                updateConfigurationCarUseCase(configuration).collect()
             }
         }
     }
@@ -80,7 +80,7 @@ class SelectCarViewModel(
             if (configuration != null) {
                 configuration.fkTypeSource = fkSource
                 Log.d("configurationfksource", fkSource.toString())
-                updateConfigurationCarUseCase.execute(configuration).collect()
+                updateConfigurationCarUseCase(configuration).collect()
             }
         }
     }
@@ -90,7 +90,7 @@ class SelectCarViewModel(
             val configuration = liveDataConfiguration.value?.getOrNull()
             if (configuration != null) {
                 configuration.fkTypeFuel = fkFuel
-                updateConfigurationCarUseCase.execute(configuration).collect()
+                updateConfigurationCarUseCase(configuration).collect()
             }
         }
     }
@@ -100,7 +100,7 @@ class SelectCarViewModel(
             val configuration = liveDataConfiguration.value?.getOrNull()
             if (configuration != null) {
                 configuration.note = value
-                updateConfigurationCarUseCase.execute(configuration).collect()
+                updateConfigurationCarUseCase(configuration).collect()
             }
         }
     }
