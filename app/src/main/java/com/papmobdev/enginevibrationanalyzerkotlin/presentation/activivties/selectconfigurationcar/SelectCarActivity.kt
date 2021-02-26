@@ -7,6 +7,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCarBinding
@@ -37,6 +38,14 @@ class SelectCarActivity : BaseActivity() {
         initClickListeners()
         initInputFilterFuelField()
         initEditTextHasFocus()
+        initOnTextChanged()
+    }
+
+    private fun initOnTextChanged() {
+        binding.editTextEngineVolume.addTextChangedListener {
+            binding.configuration?.engineVolume =
+                it?.let { return@let it.toString().toDoubleOrNull() }
+        }
     }
 
     private fun initEditTextHasFocus() {
@@ -89,7 +98,6 @@ class SelectCarActivity : BaseActivity() {
                                     position: Int,
                                     id: Long
                                 ) {
-                                    binding.root.requestFocus()
                                     viewModel.updateTypeFuelConfiguration(
                                         list[position].idFuel ?: 1
                                     )
@@ -124,9 +132,8 @@ class SelectCarActivity : BaseActivity() {
                                     position: Int,
                                     id: Long
                                 ) {
-                                    binding.root.requestFocus()
                                     viewModel.updateVibrationSourceConfiguration(
-                                        list [position].idSource ?: 1
+                                        list[position].idSource ?: 1
                                     )
                                 }
 

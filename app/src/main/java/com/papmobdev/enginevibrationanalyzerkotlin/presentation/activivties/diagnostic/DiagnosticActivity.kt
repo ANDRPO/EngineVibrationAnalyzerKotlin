@@ -46,6 +46,22 @@ class DiagnosticActivity : BaseActivity() {
             showMessage.observe(this@DiagnosticActivity, {
                 showMessage(it)
             })
+
+            states.observe(this@DiagnosticActivity, {
+                when (it) {
+                    StateDiagnostic.Default -> applyDefaultState()
+                    StateDiagnostic.Error -> applyError()
+                    StateDiagnostic.PreStart -> applyPreStart()
+                    StateDiagnostic.Start -> applyStart()
+                    StateDiagnostic.Success -> applySuccess()
+                }
+            })
+        }
+    }
+
+    fun applyDefaultState() {
+        binding.apply {
+            textViewMessage.text = ""
         }
     }
 

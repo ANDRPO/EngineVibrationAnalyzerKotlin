@@ -20,6 +20,9 @@ class DiagnosticViewModel(
     private val sendDiagnosticDataUseCase: SendDiagnosticDataUseCase,
 ) : ViewModel() {
 
+    private val _states = MutableLiveData<StateDiagnostic>()
+    val states: LiveData<StateDiagnostic> = _states
+
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> = _time
 
@@ -86,6 +89,28 @@ class DiagnosticViewModel(
                 }
             }
         }
+    }
+
+    fun applyDefaultState() {
+        _titleNotify.postValue("До начала диагностики:")
+        _time.postValue("00:03")
+    }
+
+    fun applyPreStart() {
+
+    }
+
+    fun applyStart() {
+        _titleNotify.postValue("До окончания диагнстики:")
+        _time.postValue("00:07")
+    }
+
+    fun applySuccess() {
+        _titleNotify.postValue("Тестирование завершено")
+    }
+
+    fun applyError() {
+        _titleNotify.postValue("Произошла ошибка при проведении диагностики")
     }
 
     class DiagnosticDownTimerProcedure(

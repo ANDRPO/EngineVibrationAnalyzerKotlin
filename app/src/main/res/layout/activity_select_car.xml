@@ -166,7 +166,7 @@
             android:focusableInTouchMode="true"
             android:hint="Заметка"
             android:maxLength="200"
-            android:text="@{configuration.note}"
+            android:text="@={configuration.note}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.428"
             app:layout_constraintStart_toStartOf="parent"
@@ -177,7 +177,6 @@
             android:layout_width="120dp"
             android:layout_height="50dp"
             android:insetTop="0dp"
-
             android:insetBottom="0dp"
             android:text="Далее"
             android:textAlignment="center"

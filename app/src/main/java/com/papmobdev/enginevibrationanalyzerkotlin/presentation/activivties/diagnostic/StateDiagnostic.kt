@@ -1,4 +1,9 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic
 
-enum class StateDiagnostic {
+sealed class StateDiagnostic {
+    object Success : StateDiagnostic()
+    object Error : StateDiagnostic()
+    object Default : StateDiagnostic()
+    object PreStart : StateDiagnostic()
+    object Start : StateDiagnostic()
 }
