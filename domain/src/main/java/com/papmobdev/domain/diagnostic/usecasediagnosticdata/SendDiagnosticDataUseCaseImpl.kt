@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.*
 import java.util.*
 
 @ExperimentalCoroutinesApi
-class SendDiagnosticDataUseCaseDataUseCaseImpl(
+class SendDiagnosticDataUseCaseImpl(
     private val diagnosticDataSource: DiagnosticDataSource,
     private val carsDataSource: CarsDataSource
 ) : SendDiagnosticDataUseCase {

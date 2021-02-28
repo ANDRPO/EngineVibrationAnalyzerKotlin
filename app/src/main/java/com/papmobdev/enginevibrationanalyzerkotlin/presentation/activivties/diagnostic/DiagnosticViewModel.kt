@@ -5,19 +5,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.papmobdev.domain.cars.models.CarConfiguration
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
-import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCase
 import com.papmobdev.domain.diagnostic.models.DiagnosticModel
+import com.papmobdev.domain.diagnostic.models.SendDiagnosticAndEventsModel
+import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCase
 import com.papmobdev.domain.sensor.interactor.InteractorSensor
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.*
 
 @ExperimentalCoroutinesApi
 class DiagnosticViewModel(
     private val interactorSensor: InteractorSensor,
-    private val sendDiagnosticDataUseCase: SendDiagnosticDataUseCase,
+    private val observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
+    private val sendDiagnosticAndEventsDataUseCase: SendDiagnosticAndEventsDataUseCase
 ) : ViewModel() {
 
     private val _states = MutableLiveData<StateDiagnostic>()
@@ -29,10 +34,7 @@ class DiagnosticViewModel(
     private val _titleNotify = MutableLiveData<String>()
     val titleNotify: LiveData<String> = _titleNotify
 
-    private val _showMessage = MutableLiveData<String>()
-    val showMessage: LiveData<String> = _showMessage
-
-    private val list: MutableList<EventModel> = mutableListOf()
+    private val listEvents: MutableList<EventModel> = mutableListOf()
 
     private val preDiagnosticDownTimer = DiagnosticDownTimerProcedure(3000L,
         {
@@ -54,12 +56,12 @@ class DiagnosticViewModel(
             _titleNotify.postValue("Тестирование завершено")
             interactorSensor.stopSensor()
             procedureReadEvents.cancel()
-            sendList(list)
+            sendDiagnosticData(listEvents)
         })
 
     private val procedureReadEvents = viewModelScope.launch {
         interactorSensor.streamEvent().collect {
-            list.add(it)
+            listEvents.add(it)
         }
     }
 
@@ -78,16 +80,50 @@ class DiagnosticViewModel(
 
         _time.postValue("00:03")
         _titleNotify.postValue("До начала диагностики:")
-        list.clear()
+        listEvents.clear()
     }
 
-    private fun sendList(list: List<EventModel>) {
+    private fun sendDiagnosticData(list: List<EventModel>) {
         viewModelScope.launch {
-            sendDiagnosticDataUseCase.writeDiagnostic(list).collect { result ->
+            val modelDiagnosticAndEvents = SendDiagnosticAndEventsModel(
+                getCarConfiguration().toDiagnosticModel(),
+                list
+            )
+            sendDiagnosticAndEventsDataUseCase(modelDiagnosticAndEvents).collect { result ->
                 result.onSuccess {
-                    if (!it) _showMessage.postValue("Произоршла ошибка при записи данных")
+                    if (!it) _states.postValue(StateDiagnostic.Error)
                 }
             }
+        }
+    }
+
+    private suspend fun getCarConfiguration() =
+        observeConfigurationCarUseCase().first().getOrNull() ?: CarConfiguration()
+
+    private fun CarConfiguration.toDiagnosticModel() = DiagnosticModel(
+        idDiagnostic = null,
+        dateTime = Date(),
+        fkCarMark = fkCarMark,
+        fkCarModel = fkCarModel,
+        fkCarGeneration = fkCarGeneration,
+        fkTypeFuel = fkTypeFuel,
+        engineVolume = engineVolume,
+        fkVibrationSource = fkTypeSource,
+        note = note
+    )
+
+    class DiagnosticDownTimerProcedure(
+        millisInFuture: Long,
+        private val funcOnTick: (millisUntilFinished: Long) -> Unit,
+        private val funcOnFinish: () -> Unit
+    ) : CountDownTimer(millisInFuture, 1000) {
+
+        override fun onTick(millisUntilFinished: Long) {
+            funcOnTick(millisUntilFinished)
+        }
+
+        override fun onFinish() {
+            funcOnFinish()
         }
     }
 
@@ -111,20 +147,5 @@ class DiagnosticViewModel(
 
     fun applyError() {
         _titleNotify.postValue("Произошла ошибка при проведении диагностики")
-    }
-
-    class DiagnosticDownTimerProcedure(
-        millisInFuture: Long,
-        private val funcOnTick: (millisUntilFinished: Long) -> Unit,
-        private val funcOnFinish: () -> Unit
-    ) : CountDownTimer(millisInFuture, 1000) {
-
-        override fun onTick(millisUntilFinished: Long) {
-            funcOnTick(millisUntilFinished)
-        }
-
-        override fun onFinish() {
-            funcOnFinish()
-        }
     }
 }

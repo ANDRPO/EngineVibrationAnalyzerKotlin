@@ -11,6 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.activivties.diagnostic.DiagnosticActivity">
@@ -36,7 +37,8 @@
             android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="@+id/textViewMessage"
             app:layout_constraintStart_toStartOf="@+id/textViewMessage"
-            app:layout_constraintTop_toBottomOf="@+id/textViewMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewMessage"
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/controlTest"

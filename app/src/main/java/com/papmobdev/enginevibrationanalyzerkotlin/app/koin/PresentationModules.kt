@@ -26,7 +26,7 @@ internal val manualActivityModule = module {
 
 @ExperimentalCoroutinesApi
 internal val diagnosticActivityModule = module {
-    viewModel { DiagnosticViewModel(get(), get()) }
+    viewModel { DiagnosticViewModel(get(), get(), get()) }
 }
 
 @ExperimentalCoroutinesApi

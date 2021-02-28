@@ -43,14 +43,14 @@ class DiagnosticActivity : BaseActivity() {
             titleNotify.observe(this@DiagnosticActivity, {
                 binding.textViewMessage.text = it
             })
-            showMessage.observe(this@DiagnosticActivity, {
-                showMessage(it)
-            })
 
             states.observe(this@DiagnosticActivity, {
                 when (it) {
                     StateDiagnostic.Default -> applyDefaultState()
-                    StateDiagnostic.Error -> applyError()
+                    StateDiagnostic.Error -> {
+                        applyError()
+                        showMessage("Произошла ошибка при записи данных")
+                    }
                     StateDiagnostic.PreStart -> applyPreStart()
                     StateDiagnostic.Start -> applyStart()
                     StateDiagnostic.Success -> applySuccess()
@@ -59,15 +59,18 @@ class DiagnosticActivity : BaseActivity() {
         }
     }
 
-    fun applyDefaultState() {
-        binding.apply {
-            textViewMessage.text = ""
-        }
-    }
-
     private fun initClickListeners() {
         controlTest.setOnClickListener {
-            viewModel.startDiagnostic()
+            viewModel.apply {
+                when (states.value) {
+                    StateDiagnostic.Default -> viewModel.startDiagnostic()
+                    StateDiagnostic.Error -> viewModel.startDiagnostic()
+                    StateDiagnostic.PreStart -> viewModel.cancelDiagnostic()
+                    StateDiagnostic.Start -> viewModel.cancelDiagnostic()
+                    StateDiagnostic.Success -> viewModel.startDiagnostic()
+                    null -> viewModel.startDiagnostic()
+                }
+            }
         }
     }
 

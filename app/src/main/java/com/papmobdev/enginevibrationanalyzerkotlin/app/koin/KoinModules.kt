@@ -24,9 +24,11 @@ import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCas
 import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCaseImpl
 import com.papmobdev.domain.diagnostic.DiagnosticDataSource
 import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCase
-import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCaseDataUseCaseImpl
+import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCaseImpl
 import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCase
 import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCaseImpl
+import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCase
+import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCaseImpl
 import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCase
 import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCaseImpl
 import com.papmobdev.domain.sensor.SensorDataSource
@@ -107,17 +109,17 @@ object KoinModules {
                 get()
             )
         }
+        factory<SendDiagnosticAndEventsDataUseCase> {
+            SendDiagnosticAndEventsDataUseCaseImpl(
+                get()
+            )
+        }
     }
 
     private val interactorsModule = module {
         factory<InteractorSensor> {
             InteractorSensorImpl(
                 get()
-            )
-        }
-        factory<SendDiagnosticDataUseCase> {
-            SendDiagnosticDataUseCaseDataUseCaseImpl(
-                get(), get()
             )
         }
     }

@@ -6,4 +6,6 @@ sealed class StateDiagnostic {
     object Default : StateDiagnostic()
     object PreStart : StateDiagnostic()
     object Start : StateDiagnostic()
+
+    fun invoke() = Default
 }
