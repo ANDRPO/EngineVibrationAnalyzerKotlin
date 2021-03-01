@@ -38,7 +38,7 @@ import java.util.*
 )
 data class DiagnosticsEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_diagnostic") val idDiagnostic: Int? = null,
+    @ColumnInfo(name = "id_diagnostic") val idDiagnostic: Long? = null,
 
     @ColumnInfo(name = "date_time") val dateTime: Date,
 

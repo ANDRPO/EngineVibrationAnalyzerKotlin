@@ -12,11 +12,17 @@ import com.papmobdev.domain.diagnostic.models.SendDiagnosticAndEventsModel
 import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCase
 import com.papmobdev.domain.sensor.interactor.InteractorSensor
 import com.papmobdev.domain.sensor.models.EventModel
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.feature.SingleLiveEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.concurrent.timer
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @ExperimentalCoroutinesApi
 class DiagnosticViewModel(
@@ -28,36 +34,15 @@ class DiagnosticViewModel(
     private val _states = MutableLiveData<StateDiagnostic>()
     val states: LiveData<StateDiagnostic> = _states
 
-    private val _time = MutableLiveData<String>()
-    val time: LiveData<String> = _time
+    private val _progress = MutableLiveData<Int>()
+    val progress: LiveData<Int> = _progress
 
     private val _titleNotify = MutableLiveData<String>()
     val titleNotify: LiveData<String> = _titleNotify
 
+    val message = SingleLiveEvent<String>()
+
     private val listEvents: MutableList<EventModel> = mutableListOf()
-
-    private val preDiagnosticDownTimer = DiagnosticDownTimerProcedure(3000L,
-        {
-            _time.postValue("00:0" + it / 1000)
-        },
-        {
-            _titleNotify.postValue("Секунд до окончания тестирования")
-
-            procedureReadEvents.start()
-            diagnosticDownTimer.start()
-        })
-
-
-    private val diagnosticDownTimer = DiagnosticDownTimerProcedure(7000L,
-        {
-            _time.postValue("00:0" + it / 1000)
-        },
-        {
-            _titleNotify.postValue("Тестирование завершено")
-            interactorSensor.stopSensor()
-            procedureReadEvents.cancel()
-            sendDiagnosticData(listEvents)
-        })
 
     private val procedureReadEvents = viewModelScope.launch {
         interactorSensor.streamEvent().collect {
@@ -65,20 +50,24 @@ class DiagnosticViewModel(
         }
     }
 
-    fun startDiagnostic() = viewModelScope.launch {
+    fun launchDiagnostic() = viewModelScope.launch {
         interactorSensor.startSensor()
-        preDiagnosticDownTimer.start()
+
+        procedureReadEvents.start()
+        delay(7000)
+
+    }
+
+    suspend fun myCoroutineTimer() = suspendCoroutine<Unit> {
+
     }
 
     fun cancelDiagnostic() {
-        preDiagnosticDownTimer.cancel()
-        diagnosticDownTimer.cancel()
-
         interactorSensor.stopSensor()
 
         procedureReadEvents.cancel()
 
-        _time.postValue("00:03")
+        _progress.postValue(0)
         _titleNotify.postValue("До начала диагностики:")
         listEvents.clear()
     }
@@ -112,24 +101,9 @@ class DiagnosticViewModel(
         note = note
     )
 
-    class DiagnosticDownTimerProcedure(
-        millisInFuture: Long,
-        private val funcOnTick: (millisUntilFinished: Long) -> Unit,
-        private val funcOnFinish: () -> Unit
-    ) : CountDownTimer(millisInFuture, 1000) {
-
-        override fun onTick(millisUntilFinished: Long) {
-            funcOnTick(millisUntilFinished)
-        }
-
-        override fun onFinish() {
-            funcOnFinish()
-        }
-    }
-
     fun applyDefaultState() {
         _titleNotify.postValue("До начала диагностики:")
-        _time.postValue("00:03")
+        //_progress.postValue("00:03")
     }
 
     fun applyPreStart() {
@@ -138,7 +112,7 @@ class DiagnosticViewModel(
 
     fun applyStart() {
         _titleNotify.postValue("До окончания диагнстики:")
-        _time.postValue("00:07")
+       // _progress.postValue("00:07")
     }
 
     fun applySuccess() {
@@ -147,5 +121,6 @@ class DiagnosticViewModel(
 
     fun applyError() {
         _titleNotify.postValue("Произошла ошибка при проведении диагностики")
+
     }
 }

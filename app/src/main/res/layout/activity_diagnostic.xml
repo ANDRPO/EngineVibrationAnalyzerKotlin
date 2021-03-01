@@ -16,25 +16,28 @@
         android:layout_height="match_parent"
         tools:context=".presentation.activivties.diagnostic.DiagnosticActivity">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textViewMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:text="До начала тестирования"
+            android:text="Проведение диагностики"
             android:textSize="@dimen/primaryText"
+            app:layout_constraintBottom_toTopOf="@id/progressDiagnostic"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/timerOutput"
-            android:layout_width="wrap_content"
+        <ProgressBar
+            android:id="@+id/progressDiagnostic"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
-            android:text="00:03"
+            android:layout_marginHorizontal="24dp"
+            android:indeterminate="false"
+            android:progress="90"
             android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@id/controlTest"
             app:layout_constraintEnd_toEndOf="@+id/textViewMessage"
             app:layout_constraintStart_toStartOf="@+id/textViewMessage"
             app:layout_constraintTop_toBottomOf="@+id/textViewMessage"
@@ -42,18 +45,19 @@
 
         <Button
             android:id="@+id/controlTest"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="90dp"
             android:insetTop="0dp"
+            android:background="@drawable/custom_button"
             android:insetBottom="0dp"
             android:text="Старт"
+            android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textSize="@dimen/primaryText"
-            app:layout_constraintEnd_toEndOf="@+id/timerOutput"
-            app:layout_constraintStart_toStartOf="@+id/timerOutput"
-            app:layout_constraintTop_toBottomOf="@+id/timerOutput" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/progressDiagnostic"
+            app:layout_constraintStart_toStartOf="@+id/progressDiagnostic"
+            app:layout_constraintTop_toBottomOf="@+id/progressDiagnostic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

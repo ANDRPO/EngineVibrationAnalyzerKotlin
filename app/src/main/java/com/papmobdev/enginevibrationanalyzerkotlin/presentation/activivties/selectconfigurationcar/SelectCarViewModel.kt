@@ -1,6 +1,5 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.papmobdev.domain.cars.CodeOptionsCar
 import com.papmobdev.domain.cars.models.CarConfiguration
@@ -79,7 +78,6 @@ class SelectCarViewModel(
             val configuration = liveDataConfiguration.value?.getOrNull()
             if (configuration != null) {
                 configuration.fkTypeSource = fkSource
-                Log.d("configurationfksource", fkSource.toString())
                 updateConfigurationCarUseCase(configuration).collect()
             }
         }

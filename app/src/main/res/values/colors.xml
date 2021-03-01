@@ -4,11 +4,18 @@
 
     <color name="colorPrimary">#1A1A1A</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#E600F0FF</color>
+    <color name="colorAccent">#03DAC5</color>
     <color name="colorBackground">#202020</color>
     <color name="colorBlackBackground">#151515</color>
     <color name="colorText">#F2FFFFFF</color>
     <color name="colorTextAlpha">#CDFFFFFF</color>
+    <color name="error">#CF6679</color>
+
+    <color name="overlay0">#0003DAC6</color>
+    <color name="overlay4">#0A03DAC6</color>
+    <color name="overlay12">#1F03DAC6</color>
+    <color name="overlay10">#1A03DAC6</color>
+    <color name="overlay8">#1403DAC6</color>
 
     <color name="colorRedX">#FF0000</color>
     <color name="colorGreenY">#00FF00</color>

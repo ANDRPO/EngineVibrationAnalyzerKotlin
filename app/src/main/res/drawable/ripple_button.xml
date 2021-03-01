@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/overlay0">
+    <item
+        android:drawable="@color/overlay0"
+        android:state_checked="false"/>
+    <item
+        android:drawable="@color/overlay12"
+        android:state_checked="true">
+
+    </item>
+    <item
+        android:drawable="@color/overlay0" />
+</ripple>

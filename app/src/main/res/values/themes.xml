@@ -4,6 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/colorTextAlpha</item>
         <!-- Secondary brand color. -->
@@ -20,6 +21,5 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:textAppearanceButton">?attr/textAppearanceHeadline6</item>
         <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
-
     </style>
 </resources>

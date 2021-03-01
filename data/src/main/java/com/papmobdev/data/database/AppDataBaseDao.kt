@@ -44,30 +44,29 @@ interface AppDataBaseDao {
 
 
     @Insert
-    fun insertDiagnostic(diagnosticsEntity: DiagnosticsEntity)
+    fun insertDiagnostic(diagnosticsEntity: DiagnosticsEntity): Long
+
+    @Insert
+    fun insertSensorEvents(listEvents: List<SensorEventEntity>)
 
     @Transaction
     fun insertDiagnosticEventsTransaction(
         diagnosticsEntity: DiagnosticsEntity,
         listEvents: List<EventModel>
     ) {
-        insertDiagnostic(diagnosticsEntity)
-        val idDiagnostic: Int = getLastDiagnostic().idDiagnostic.let { return@let it } ?: throw Exception()
+        val idDiagnostic = insertDiagnostic(diagnosticsEntity)
         insertSensorEvents(listEvents.toData(idDiagnostic))
     }
-
-    @Insert
-    fun insertSensorEvents(listEvents: List<SensorEventEntity>)
 
     @Query("SELECT * FROM diagnostic ORDER BY id_diagnostic DESC LIMIT 1")
     fun getLastDiagnostic(): DiagnosticsEntity
 
 
-    private fun List<EventModel>.toData(idDiagnostic: Int) = map {
+    private fun List<EventModel>.toData(idDiagnostic: Long) = map {
         it.toData(idDiagnostic)
     }
 
-    private fun EventModel.toData(idDiagnostic: Int): SensorEventEntity = SensorEventEntity(
+    private fun EventModel.toData(idDiagnostic: Long): SensorEventEntity = SensorEventEntity(
         idEvent = id,
         xValue = x_value,
         yValue = y_value,

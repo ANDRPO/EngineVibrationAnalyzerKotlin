@@ -26,6 +26,6 @@ data class SensorEventEntity(
 
     @ColumnInfo(name = "timestamp") val timestamp: Long,
 
-    @ColumnInfo(name = "fk_diagnostic") val fkDiagnostic: Int
+    @ColumnInfo(name = "fk_diagnostic") val fkDiagnostic: Long
 
 )

@@ -1,6 +1,7 @@
 package com.papmobdev.data.sensor
 
 import android.hardware.SensorEvent
+import com.papmobdev.data.mapping.toDomain
 import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +19,4 @@ class SensorDataSourceImpl(
     }
 
     override fun stopSensor() = appAccelerometer.stop()
-
-    private fun SensorEvent.toDomain(): EventModel = EventModel(
-        id = null,
-        x_value = values[0],
-        y_value = values[1],
-        z_value = values[2],
-        timestamp = timestamp
-    )
 }

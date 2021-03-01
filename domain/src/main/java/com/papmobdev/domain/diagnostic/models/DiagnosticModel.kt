@@ -3,7 +3,7 @@ package com.papmobdev.domain.diagnostic.models
 import java.util.*
 
 data class DiagnosticModel(
-    val idDiagnostic: Int? = null,
+    val idDiagnostic: Long? = null,
 
     val dateTime: Date,
 
