@@ -1,4 +1,4 @@
-package com.papmobdev.domain.diagnostic.usecasesensorevents
+package com.papmobdev.domain.diagnostic.models
 
 import com.papmobdev.domain.sensor.models.EventModel
 

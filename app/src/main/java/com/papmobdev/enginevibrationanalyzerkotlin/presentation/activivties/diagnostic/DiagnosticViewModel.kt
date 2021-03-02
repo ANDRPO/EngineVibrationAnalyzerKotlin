@@ -1,40 +1,41 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic
 
-import android.os.CountDownTimer
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.papmobdev.domain.cars.models.CarConfiguration
-import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
-import com.papmobdev.domain.diagnostic.models.DiagnosticModel
-import com.papmobdev.domain.diagnostic.models.SendDiagnosticAndEventsModel
-import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCase
-import com.papmobdev.domain.sensor.interactor.InteractorSensor
-import com.papmobdev.domain.sensor.models.EventModel
+import androidx.lifecycle.*
+import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
+import com.papmobdev.domain.diagnostic.diagnosticinteractor.StatesDiagnostic
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.feature.SingleLiveEvent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.concurrent.timer
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @ExperimentalCoroutinesApi
 class DiagnosticViewModel(
-    private val interactorSensor: InteractorSensor,
-    private val observeConfigurationCarUseCase: ObserveConfigurationCarUseCase,
-    private val sendDiagnosticAndEventsDataUseCase: SendDiagnosticAndEventsDataUseCase
+    private val interactorDiagnostic: InteractorDiagnostic
 ) : ViewModel() {
 
-    private val _states = MutableLiveData<StateDiagnostic>()
-    val states: LiveData<StateDiagnostic> = _states
+    private val _statesView = MutableLiveData(StatesViewDiagnostic.DEFAULT)
+    val statesView: LiveData<StatesViewDiagnostic> = _statesView
 
-    private val _progress = MutableLiveData<Int>()
+    private val observeProgressDiagnostic = viewModelScope.launch {
+        interactorDiagnostic.progress.collect {
+            _progress.postValue(it)
+        }
+    }
+
+    private val observeStatesDiagnostic = viewModelScope.launch {
+        interactorDiagnostic.stateDiagnostic.collect {
+            val stateView = when (it) {
+                StatesDiagnostic.NONE -> StatesViewDiagnostic.DEFAULT
+                StatesDiagnostic.START -> StatesViewDiagnostic.START
+                StatesDiagnostic.SUCCESS -> StatesViewDiagnostic.SUCCESS
+                StatesDiagnostic.CANCEL -> StatesViewDiagnostic.CANCEL
+                StatesDiagnostic.ERROR -> StatesViewDiagnostic.ERROR
+            }
+            _statesView.postValue(stateView)
+        }
+    }
+
+    private val _progress = MutableLiveData(0)
     val progress: LiveData<Int> = _progress
 
     private val _titleNotify = MutableLiveData<String>()
@@ -42,77 +43,24 @@ class DiagnosticViewModel(
 
     val message = SingleLiveEvent<String>()
 
-    private val listEvents: MutableList<EventModel> = mutableListOf()
-
-    private val procedureReadEvents = viewModelScope.launch {
-        interactorSensor.streamEvent().collect {
-            listEvents.add(it)
+    fun startDiagnostic() {
+        viewModelScope.launch(Dispatchers.IO) {
+            interactorDiagnostic.startDiagnostic(this@DiagnosticViewModel.viewModelScope)
         }
     }
 
-    fun launchDiagnostic() = viewModelScope.launch {
-        interactorSensor.startSensor()
-
-        procedureReadEvents.start()
-        delay(7000)
-
+    fun stopDiagnostic() {
+        interactorDiagnostic.cancelDiagnostic()
     }
 
-    suspend fun myCoroutineTimer() = suspendCoroutine<Unit> {
-
-    }
-
-    fun cancelDiagnostic() {
-        interactorSensor.stopSensor()
-
-        procedureReadEvents.cancel()
-
+    fun applyDefault() {
+        _titleNotify.postValue("Проведение диагностики")
         _progress.postValue(0)
-        _titleNotify.postValue("До начала диагностики:")
-        listEvents.clear()
-    }
-
-    private fun sendDiagnosticData(list: List<EventModel>) {
-        viewModelScope.launch {
-            val modelDiagnosticAndEvents = SendDiagnosticAndEventsModel(
-                getCarConfiguration().toDiagnosticModel(),
-                list
-            )
-            sendDiagnosticAndEventsDataUseCase(modelDiagnosticAndEvents).collect { result ->
-                result.onSuccess {
-                    if (!it) _states.postValue(StateDiagnostic.Error)
-                }
-            }
-        }
-    }
-
-    private suspend fun getCarConfiguration() =
-        observeConfigurationCarUseCase().first().getOrNull() ?: CarConfiguration()
-
-    private fun CarConfiguration.toDiagnosticModel() = DiagnosticModel(
-        idDiagnostic = null,
-        dateTime = Date(),
-        fkCarMark = fkCarMark,
-        fkCarModel = fkCarModel,
-        fkCarGeneration = fkCarGeneration,
-        fkTypeFuel = fkTypeFuel,
-        engineVolume = engineVolume,
-        fkVibrationSource = fkTypeSource,
-        note = note
-    )
-
-    fun applyDefaultState() {
-        _titleNotify.postValue("До начала диагностики:")
-        //_progress.postValue("00:03")
-    }
-
-    fun applyPreStart() {
-
     }
 
     fun applyStart() {
-        _titleNotify.postValue("До окончания диагнстики:")
-       // _progress.postValue("00:07")
+        _titleNotify.postValue("Диагностика началась")
+        _progress.postValue(0)
     }
 
     fun applySuccess() {
@@ -121,6 +69,11 @@ class DiagnosticViewModel(
 
     fun applyError() {
         _titleNotify.postValue("Произошла ошибка при проведении диагностики")
+        _progress.postValue(0)
+    }
 
+    fun applyCancel() {
+        _titleNotify.postValue("Диагностика прервана. Нажмите старт, чтобы повторить")
+        _progress.postValue(0)
     }
 }

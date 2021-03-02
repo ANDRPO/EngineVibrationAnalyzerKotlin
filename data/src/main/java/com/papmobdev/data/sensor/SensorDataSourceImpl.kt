@@ -16,7 +16,7 @@ class SensorDataSourceImpl(
 
     override fun getStreamEvents(): Flow<EventModel> = appAccelerometer.streamEvents().map {
         it.toDomain()
-    }
+    }.flowOn(Dispatchers.Default)
 
     override fun stopSensor() = appAccelerometer.stop()
 }

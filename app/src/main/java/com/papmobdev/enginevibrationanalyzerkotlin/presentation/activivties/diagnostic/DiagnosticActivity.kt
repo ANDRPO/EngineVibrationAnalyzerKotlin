@@ -45,13 +45,13 @@ class DiagnosticActivity : BaseActivity() {
                 binding.textViewMessage.text = it
             })
 
-            states.observe(this@DiagnosticActivity, {
-                when (it) {
-                    StateDiagnostic.Default -> applyDefaultState()
-                    StateDiagnostic.Error -> applyError()
-                    StateDiagnostic.PreStart -> applyPreStart()
-                    StateDiagnostic.Start -> applyStart()
-                    StateDiagnostic.Success -> applySuccess()
+            statesView.observe(this@DiagnosticActivity, {
+                when (it?.let { return@let it } ?: StatesViewDiagnostic.DEFAULT) {
+                    StatesViewDiagnostic.DEFAULT -> applyDefault()
+                    StatesViewDiagnostic.SUCCESS -> applySuccess()
+                    StatesViewDiagnostic.ERROR -> applyError()
+                    StatesViewDiagnostic.START -> applyStart()
+                    StatesViewDiagnostic.CANCEL -> applyCancel()
                 }
             })
 
@@ -62,18 +62,22 @@ class DiagnosticActivity : BaseActivity() {
     }
 
     private fun initClickListeners() {
-        /*controlTest.setOnClickListener {
+        controlTest.setOnClickListener {
             viewModel.apply {
-                when (states.value) {
-                    StateDiagnostic.Default -> viewModel.launchDiagnostic()
-                    StateDiagnostic.Error -> viewModel.launchDiagnostic()
-                    StateDiagnostic.PreStart -> viewModel.cancelDiagnostic()
-                    StateDiagnostic.Start -> viewModel.cancelDiagnostic()
-                    StateDiagnostic.Success -> viewModel.launchDiagnostic()
-                    null -> viewModel.launchDiagnostic()
+                when (statesView.value) {
+                    StatesViewDiagnostic.DEFAULT -> viewModel.startDiagnostic()
+                    StatesViewDiagnostic.ERROR -> viewModel.startDiagnostic()
+                    StatesViewDiagnostic.CANCEL -> viewModel.startDiagnostic()
+                    StatesViewDiagnostic.START -> viewModel.stopDiagnostic()
+                    StatesViewDiagnostic.SUCCESS -> viewModel.startDiagnostic()
                 }
             }
-        }*/
+        }
+    }
+
+    override fun onPause() {
+        if (viewModel.statesView.value == StatesViewDiagnostic.START) viewModel.stopDiagnostic()
+        super.onPause()
     }
 
     private fun showMessage(message: String) =

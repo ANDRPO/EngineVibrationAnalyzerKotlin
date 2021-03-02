@@ -23,14 +23,10 @@ import com.papmobdev.domain.cars.usecasetypesfuels.GetTypesFuelUseCaseImpl
 import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCase
 import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCaseImpl
 import com.papmobdev.domain.diagnostic.DiagnosticDataSource
-import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCase
-import com.papmobdev.domain.diagnostic.usecasediagnosticdata.SendDiagnosticDataUseCaseImpl
-import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCase
-import com.papmobdev.domain.diagnostic.usecasediagnostic.SendDiagnosticUseCaseImpl
+import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
+import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnosticImpl
 import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCase
 import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCaseImpl
-import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCase
-import com.papmobdev.domain.diagnostic.usecasesensorevents.SendListSensorEventsUseCaseImpl
 import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.interactor.InteractorSensor
 import com.papmobdev.domain.sensor.interactor.InteractorSensorImpl
@@ -99,16 +95,6 @@ object KoinModules {
                 get()
             )
         }
-        factory<SendDiagnosticUseCase> {
-            SendDiagnosticUseCaseImpl(
-                get()
-            )
-        }
-        factory<SendListSensorEventsUseCase> {
-            SendListSensorEventsUseCaseImpl(
-                get()
-            )
-        }
         factory<SendDiagnosticAndEventsDataUseCase> {
             SendDiagnosticAndEventsDataUseCaseImpl(
                 get()
@@ -120,6 +106,11 @@ object KoinModules {
         factory<InteractorSensor> {
             InteractorSensorImpl(
                 get()
+            )
+        }
+        factory<InteractorDiagnostic> {
+            InteractorDiagnosticImpl(
+                get(), get(), get()
             )
         }
     }
