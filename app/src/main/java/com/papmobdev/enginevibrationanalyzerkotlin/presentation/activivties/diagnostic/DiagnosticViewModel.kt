@@ -13,14 +13,10 @@ class DiagnosticViewModel(
     private val interactorDiagnostic: InteractorDiagnostic
 ) : ViewModel() {
 
+    var job: Job = Job()
+
     private val _statesView = MutableLiveData(StatesViewDiagnostic.DEFAULT)
     val statesView: LiveData<StatesViewDiagnostic> = _statesView
-
-    private val observeProgressDiagnostic = viewModelScope.launch {
-        interactorDiagnostic.progress.collect {
-            _progress.postValue(it)
-        }
-    }
 
     private val observeStatesDiagnostic = viewModelScope.launch {
         interactorDiagnostic.stateDiagnostic.collect {
@@ -35,45 +31,53 @@ class DiagnosticViewModel(
         }
     }
 
-    private val _progress = MutableLiveData(0)
-    val progress: LiveData<Int> = _progress
+    val progress: LiveData<Int> = interactorDiagnostic.progress.asLiveData()
 
     private val _titleNotify = MutableLiveData<String>()
     val titleNotify: LiveData<String> = _titleNotify
 
+    private val _textControlTestButton = MutableLiveData<String>()
+    val textControlTestButton: LiveData<String> = _textControlTestButton
+
     val message = SingleLiveEvent<String>()
 
     fun startDiagnostic() {
-        viewModelScope.launch(Dispatchers.IO) {
-            interactorDiagnostic.startDiagnostic(this@DiagnosticViewModel.viewModelScope)
+        job = viewModelScope.launch(Dispatchers.IO) {
+            interactorDiagnostic.startDiagnostic()
         }
     }
 
     fun stopDiagnostic() {
         interactorDiagnostic.cancelDiagnostic()
+        job.cancel()
     }
 
     fun applyDefault() {
         _titleNotify.postValue("Проведение диагностики")
-        _progress.postValue(0)
+        _textControlTestButton.postValue("Старт")
+        job.cancel()
     }
 
     fun applyStart() {
         _titleNotify.postValue("Диагностика началась")
-        _progress.postValue(0)
+        _textControlTestButton.postValue("Стоп")
     }
 
     fun applySuccess() {
         _titleNotify.postValue("Тестирование завершено")
+        _textControlTestButton.postValue("Далее")
+        job.cancel()
     }
 
     fun applyError() {
         _titleNotify.postValue("Произошла ошибка при проведении диагностики")
-        _progress.postValue(0)
+        _textControlTestButton.postValue("Повторить")
+        job.cancel()
     }
 
     fun applyCancel() {
-        _titleNotify.postValue("Диагностика прервана. Нажмите старт, чтобы повторить")
-        _progress.postValue(0)
+        _titleNotify.postValue("Диагностика прервана.")
+        _textControlTestButton.postValue("Повторить")
+        job.cancel()
     }
 }

@@ -38,13 +38,6 @@ class DiagnosticActivity : BaseActivity() {
 
     private fun initObserve() {
         viewModel.apply {
-            progress.observe(this@DiagnosticActivity, {
-                binding.progressDiagnostic.progress = it
-            })
-            titleNotify.observe(this@DiagnosticActivity, {
-                binding.textViewMessage.text = it
-            })
-
             statesView.observe(this@DiagnosticActivity, {
                 when (it?.let { return@let it } ?: StatesViewDiagnostic.DEFAULT) {
                     StatesViewDiagnostic.DEFAULT -> applyDefault()
@@ -54,7 +47,6 @@ class DiagnosticActivity : BaseActivity() {
                     StatesViewDiagnostic.CANCEL -> applyCancel()
                 }
             })
-
             message.observe(this@DiagnosticActivity, Observer {
                 showMessage(it)
             })
@@ -82,6 +74,5 @@ class DiagnosticActivity : BaseActivity() {
 
     private fun showMessage(message: String) =
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
 
 }

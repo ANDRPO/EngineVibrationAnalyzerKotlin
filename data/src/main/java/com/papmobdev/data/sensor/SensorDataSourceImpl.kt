@@ -1,6 +1,5 @@
 package com.papmobdev.data.sensor
 
-import android.hardware.SensorEvent
 import com.papmobdev.data.mapping.toDomain
 import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.models.EventModel

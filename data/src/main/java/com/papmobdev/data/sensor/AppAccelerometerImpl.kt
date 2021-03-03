@@ -6,10 +6,10 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.*
 
 class AppAccelerometerImpl(context: Context) : AppAccelerometer {
 
@@ -47,6 +47,8 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
     @ExperimentalCoroutinesApi
     override fun streamEvents(): Flow<SensorEvent> = events
 
-    override fun stop() = sensorManager.unregisterListener(listener, accelerometer)
+    override fun stop() {
+        sensorManager.unregisterListener(listener, accelerometer)
+    }
 
 }
