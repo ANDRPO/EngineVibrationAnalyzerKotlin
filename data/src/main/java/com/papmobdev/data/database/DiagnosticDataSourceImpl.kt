@@ -18,9 +18,9 @@ class DiagnosticDataSourceImpl(
     override fun sendDiagnostic(diagnostic: DiagnosticModel) =
         dao.insertDiagnostic(diagnostic.toData())
 
-    override fun sendDiagnosticAndEventsData(diagnostic: DiagnosticModel, list: List<EventModel>) {
+    override fun sendDiagnosticAndEventsData(diagnostic: DiagnosticModel, list: List<EventModel>) =
         dao.insertDiagnosticEventsTransaction(diagnostic.toData(), list)
-    }
+
 
     override fun getLastDiagnostic(): DiagnosticModel = dao.getLastDiagnostic().toDomain()
 }

@@ -52,6 +52,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewSelectCarsOptions" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:background="?attr/selectableItemBackground"
+            android:elevation="3dp"
+            android:src="@drawable/ic_baseline_navigate_next_24"
+            app:layout_constraintBottom_toBottomOf="@+id/selectMarkCar"
+            app:layout_constraintEnd_toEndOf="@+id/selectMarkCar"
+            app:layout_constraintTop_toTopOf="@id/selectMarkCar" />
+
         <Button
             android:id="@+id/selectModelCar"
             android:layout_width="match_parent"
@@ -70,6 +81,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectMarkCar" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:background="?attr/selectableItemBackground"
+            android:elevation="3dp"
+            android:src="@drawable/ic_baseline_navigate_next_24"
+            app:layout_constraintBottom_toBottomOf="@+id/selectModelCar"
+            app:layout_constraintEnd_toEndOf="@+id/selectModelCar"
+            app:layout_constraintTop_toTopOf="@id/selectModelCar" />
+
         <Button
             android:id="@+id/selectGenerationCar"
             android:layout_width="match_parent"
@@ -86,6 +108,17 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectModelCar" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"
+            android:background="?attr/selectableItemBackground"
+            android:elevation="3dp"
+            android:src="@drawable/ic_baseline_navigate_next_24"
+            app:layout_constraintBottom_toBottomOf="@+id/selectGenerationCar"
+            app:layout_constraintEnd_toEndOf="@+id/selectGenerationCar"
+            app:layout_constraintTop_toTopOf="@id/selectGenerationCar" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinnerSourceVibration"
@@ -180,9 +213,9 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="Далее"
-            android:textColor="@color/colorAccent"
             android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/secondaryText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

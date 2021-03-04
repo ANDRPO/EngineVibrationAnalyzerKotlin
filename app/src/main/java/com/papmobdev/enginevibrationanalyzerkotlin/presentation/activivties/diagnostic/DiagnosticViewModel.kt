@@ -1,45 +1,55 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic
 
-import androidx.lifecycle.*
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.StatesDiagnostic
-import com.papmobdev.enginevibrationanalyzerkotlin.presentation.feature.SingleLiveEvent
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
-import java.util.*
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class DiagnosticViewModel(
     private val interactorDiagnostic: InteractorDiagnostic
 ) : ViewModel() {
 
-    var job: Job = Job()
-
-    private val _statesView = MutableLiveData(StatesViewDiagnostic.DEFAULT)
-    val statesView: LiveData<StatesViewDiagnostic> = _statesView
-
-    private val observeStatesDiagnostic = viewModelScope.launch {
-        interactorDiagnostic.stateDiagnostic.collect {
-            val stateView = when (it) {
-                StatesDiagnostic.NONE -> StatesViewDiagnostic.DEFAULT
-                StatesDiagnostic.START -> StatesViewDiagnostic.START
-                StatesDiagnostic.SUCCESS -> StatesViewDiagnostic.SUCCESS
-                StatesDiagnostic.CANCEL -> StatesViewDiagnostic.CANCEL
-                StatesDiagnostic.ERROR -> StatesViewDiagnostic.ERROR
+    init {
+        viewModelScope.launch {
+            interactorDiagnostic.stateDiagnostic.collect {
+                _stateView.postValue(it.toViewStates())
             }
-            _statesView.postValue(stateView)
+        }
+        viewModelScope.launch {
+            interactorDiagnostic.progress.collect {
+                _progress.postValue(it)
+            }
         }
     }
 
-    val progress: LiveData<Int> = interactorDiagnostic.progress.asLiveData()
+    var job: Job = Job()
+
+    val _stateView = MutableLiveData<StatesViewDiagnostic>()
+    val stateView: LiveData<StatesViewDiagnostic> = _stateView
+
+    private val _progress = MutableLiveData<Int>()
+    val progress: LiveData<Int> = _progress
 
     private val _titleNotify = MutableLiveData<String>()
     val titleNotify: LiveData<String> = _titleNotify
 
-    private val _textControlTestButton = MutableLiveData<String>()
-    val textControlTestButton: LiveData<String> = _textControlTestButton
+    private val _textControlDiagnosticButton = MutableLiveData<String>()
+    val textControlDiagnosticButton: LiveData<String> = _textControlDiagnosticButton
 
-    val message = SingleLiveEvent<String>()
+    override fun onCleared() {
+        Log.e("CLEARED", "CLEARED")
+        super.onCleared()
+
+    }
 
     fun startDiagnostic() {
         job = viewModelScope.launch(Dispatchers.IO) {
@@ -48,36 +58,47 @@ class DiagnosticViewModel(
     }
 
     fun stopDiagnostic() {
-        interactorDiagnostic.cancelDiagnostic()
+        viewModelScope.launch {
+            interactorDiagnostic.cancelDiagnostic()
+        }
         job.cancel()
     }
 
     fun applyDefault() {
         _titleNotify.postValue("Проведение диагностики")
-        _textControlTestButton.postValue("Старт")
+        _textControlDiagnosticButton.postValue("Старт")
         job.cancel()
     }
 
     fun applyStart() {
         _titleNotify.postValue("Диагностика началась")
-        _textControlTestButton.postValue("Стоп")
+        _textControlDiagnosticButton.postValue("Стоп")
     }
 
     fun applySuccess() {
         _titleNotify.postValue("Тестирование завершено")
-        _textControlTestButton.postValue("Далее")
+        _textControlDiagnosticButton.postValue("Далее")
         job.cancel()
     }
 
     fun applyError() {
         _titleNotify.postValue("Произошла ошибка при проведении диагностики")
-        _textControlTestButton.postValue("Повторить")
+        _textControlDiagnosticButton.postValue("Повторить")
         job.cancel()
     }
 
     fun applyCancel() {
         _titleNotify.postValue("Диагностика прервана.")
-        _textControlTestButton.postValue("Повторить")
+        _textControlDiagnosticButton.postValue("Повторить")
         job.cancel()
+    }
+
+
+    private fun StatesDiagnostic.toViewStates(): StatesViewDiagnostic = when (this) {
+        StatesDiagnostic.NONE -> StatesViewDiagnostic.DEFAULT
+        StatesDiagnostic.START -> StatesViewDiagnostic.START
+        StatesDiagnostic.SUCCESS -> StatesViewDiagnostic.SUCCESS
+        StatesDiagnostic.CANCEL -> StatesViewDiagnostic.CANCEL
+        StatesDiagnostic.ERROR -> StatesViewDiagnostic.ERROR
     }
 }

@@ -25,8 +25,6 @@ import com.papmobdev.domain.cars.usecasevibrationsource.GetVibrationSourceUseCas
 import com.papmobdev.domain.diagnostic.DiagnosticDataSource
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnosticImpl
-import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCase
-import com.papmobdev.domain.diagnostic.usecasediagnosticandeventsdata.SendDiagnosticAndEventsDataUseCaseImpl
 import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.interactor.InteractorSensor
 import com.papmobdev.domain.sensor.interactor.InteractorSensorImpl
@@ -92,11 +90,6 @@ object KoinModules {
         }
         factory<UpdateConfigurationCarUseCase> {
             UpdateConfigurationCarUseCaseImpl(
-                get()
-            )
-        }
-        factory<SendDiagnosticAndEventsDataUseCase> {
-            SendDiagnosticAndEventsDataUseCaseImpl(
                 get()
             )
         }

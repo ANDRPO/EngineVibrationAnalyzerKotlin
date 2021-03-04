@@ -8,6 +8,7 @@ import android.hardware.SensorManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.*
 
@@ -17,11 +18,7 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
     private val accelerometer =
         sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) as Sensor
 
-    private val _events = MutableSharedFlow<SensorEvent>(
-        replay = 100,
-        extraBufferCapacity = 1000,
-        onBufferOverflow = BufferOverflow.SUSPEND
-    )
+    private val _events = MutableSharedFlow<SensorEvent>(replay = 0, extraBufferCapacity = 2000, onBufferOverflow = BufferOverflow.SUSPEND)
 
     private val events = _events.asSharedFlow()
 

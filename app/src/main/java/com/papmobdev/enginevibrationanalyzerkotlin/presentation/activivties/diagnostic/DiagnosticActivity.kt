@@ -3,8 +3,9 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.dia
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityDiagnosticBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
@@ -27,18 +28,26 @@ class DiagnosticActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding =
             binding<ActivityDiagnosticBinding>(R.layout.activity_diagnostic).value.apply {
                 lifecycleOwner = this@DiagnosticActivity
-                viewModel = this@DiagnosticActivity.viewModel
+                if (viewModel == null)
+                    viewModel = this@DiagnosticActivity.viewModel
             }
+
         initClickListeners()
         initObserve()
+        if (viewModel.stateView.value == null) {
+            Log.e("STATEVIEWMODEL", viewModel.stateView.value.toString())
+            viewModel._stateView.value = StatesViewDiagnostic.DEFAULT
+        }
     }
 
     private fun initObserve() {
         viewModel.apply {
-            statesView.observe(this@DiagnosticActivity, {
+            stateView.observe(this@DiagnosticActivity, {
+                Log.e("STATEINITOBSERVE", it.toString())
                 when (it?.let { return@let it } ?: StatesViewDiagnostic.DEFAULT) {
                     StatesViewDiagnostic.DEFAULT -> applyDefault()
                     StatesViewDiagnostic.SUCCESS -> applySuccess()
@@ -47,16 +56,13 @@ class DiagnosticActivity : BaseActivity() {
                     StatesViewDiagnostic.CANCEL -> applyCancel()
                 }
             })
-            message.observe(this@DiagnosticActivity, Observer {
-                showMessage(it)
-            })
         }
     }
 
     private fun initClickListeners() {
         controlTest.setOnClickListener {
             viewModel.apply {
-                when (statesView.value) {
+                when (stateView.value) {
                     StatesViewDiagnostic.DEFAULT -> viewModel.startDiagnostic()
                     StatesViewDiagnostic.ERROR -> viewModel.startDiagnostic()
                     StatesViewDiagnostic.CANCEL -> viewModel.startDiagnostic()
@@ -68,7 +74,7 @@ class DiagnosticActivity : BaseActivity() {
     }
 
     override fun onPause() {
-        if (viewModel.statesView.value == StatesViewDiagnostic.START) viewModel.stopDiagnostic()
+        if (viewModel.stateView.value == StatesViewDiagnostic.START) viewModel.stopDiagnostic()
         super.onPause()
     }
 
