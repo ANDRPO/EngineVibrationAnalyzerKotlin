@@ -16,6 +16,7 @@ import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OnItemC
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OptionsModel
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_car_parameter_list.*
+import kotlinx.android.synthetic.main.activity_car_parameter_list.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,7 +27,10 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
     private lateinit var binding: ActivityCarParameterListBinding
 
     private val viewModel: CarParameterListViewModel by viewModel()
-    private lateinit var adapter: CarParametersAdapters
+    private val adapter: CarParametersAdapters by lazy {
+        binding.searchCarEditText.searchCarEditText.setText("")
+        CarParametersAdapters(this)
+    }
 
     companion object {
         private const val KEY_TYPE_CAR_OPTION = "key_type_car_option"
@@ -45,19 +49,19 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
                 viewModel = this@CarParameterListActivity.viewModel
             }
         initObservable()
-        viewModel.fetchData(getCarOption())
-        viewModel.carOptionsCar = getCarOption()
+        viewModel.codeOptionsCar = getCarOption()
+        viewModel.fetchData()
     }
 
     private fun initObservable() {
         viewModel.apply {
             listOptions.observe(this@CarParameterListActivity, {
-                createRecyclerView(it)
+                it?.let { list -> createRecyclerView(list) }
             })
             listOptionsCopy.observe(this@CarParameterListActivity, { list ->
                 adapter.submitList(list)
                 binding.apply {
-                    list.size.also {
+                    list?.size.also {
                         notifyEmptyListOptions.visibility =
                             if (it == 0) View.VISIBLE else View.INVISIBLE
                         recyclerViewCarParameter.visibility =
@@ -74,7 +78,6 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun createRecyclerView(it: MutableList<OptionsModel>) {
-        adapter = CarParametersAdapters(this@CarParameterListActivity)
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 binding.recyclerViewCarParameter.scrollToPosition(0)
@@ -103,8 +106,12 @@ class CarParameterListActivity : BaseActivity(), OnItemClickListener {
         finish()
     }
 
-    private fun getCarOption(): CodeOptionsCar =
-        this.intent?.getSerializableExtra(KEY_TYPE_CAR_OPTION) as CodeOptionsCar
+    private fun getCarOption(): CodeOptionsCar {
+        val carOption = this.intent?.getSerializableExtra(KEY_TYPE_CAR_OPTION)
+            ?.let { return@let it } ?: this@CarParameterListActivity.finish()
+        return carOption as CodeOptionsCar
+    }
+
 
     private fun showToast(message: String) {
         Toast.makeText(this@CarParameterListActivity, message, Toast.LENGTH_SHORT).show()

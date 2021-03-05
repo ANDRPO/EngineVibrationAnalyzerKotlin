@@ -1,6 +1,5 @@
 package com.papmobdev.domain.diagnostic.diagnosticinteractor
 
-import android.util.Log
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.CarConfiguration
 import com.papmobdev.domain.diagnostic.DiagnosticDataSource
@@ -8,11 +7,8 @@ import com.papmobdev.domain.diagnostic.models.DiagnosticModel
 import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import java.util.*
-import kotlin.concurrent.fixedRateTimer
-import kotlin.concurrent.timerTask
 
 @ExperimentalCoroutinesApi
 class InteractorDiagnosticImpl(
@@ -47,7 +43,6 @@ class InteractorDiagnosticImpl(
 
     private suspend fun setState(statesDiagnostic: StatesDiagnostic) {
         _stateDiagnostic.emit(statesDiagnostic)
-        Log.e("STATEInteeactorSetState", statesDiagnostic.name)
     }
 
     private fun startSensor() = sensorDataSource.startSensor()

@@ -28,19 +28,22 @@ class CarParameterListViewModel(
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase
 ) : ViewModel(), TextViewBindingAdapter.OnTextChanged {
 
-    private val _listOptions: MutableLiveData<MutableList<*>> = MutableLiveData()
-    val listOptions: LiveData<MutableList<OptionsModel>> = _listOptions.map {
-        it.convertCarsOptionsToAdapter()
+    private val _listOptions: MutableLiveData<MutableList<*>?> = MutableLiveData()
+    val listOptions: LiveData<MutableList<OptionsModel>?> = _listOptions.map {
+        it?.convertCarsOptionsToAdapter()
     }
 
-    private val _listOptionsCopy: MutableLiveData<MutableList<*>> = MutableLiveData()
-    val listOptionsCopy: LiveData<MutableList<OptionsModel>> = _listOptionsCopy.map {
-        it.convertCarsOptionsToAdapter()
+    private val _listOptionsCopy: MutableLiveData<MutableList<*>?> = MutableLiveData()
+    val listOptionsCopy: LiveData<MutableList<OptionsModel>?> = _listOptionsCopy.map {
+        it?.convertCarsOptionsToAdapter()
     }
 
-    lateinit var carOptionsCar: CodeOptionsCar
+    lateinit var codeOptionsCar: CodeOptionsCar
 
     private lateinit var carConfiguration: CarConfiguration
+
+    private val _showErrorMessage = MutableLiveData<String>()
+    val showErrorMessage: LiveData<String> = _showErrorMessage
 
     private fun getMarks(): LiveData<Result<List<CarMark>>> =
         getMarksUseCase().asLiveData()
@@ -54,16 +57,14 @@ class CarParameterListViewModel(
     private fun getLastConfiguration(): LiveData<Result<CarConfiguration>> =
         observeConfigurationCarUseCase().asLiveData()
 
-    private val _showErrorMessage = MutableLiveData<String>()
-    val showErrorMessage = _showErrorMessage
-
-    fun fetchData(typeOption: CodeOptionsCar) {
+    fun fetchData() {
         if (listOptions.value != null) return
+
         viewModelScope.launch(Dispatchers.IO) {
             getLastConfiguration().asFlow().collect { result ->
                 result.onSuccess {
                     carConfiguration = it
-                    getList(typeOption)
+                    getList(codeOptionsCar)
                 }
             }
         }
@@ -108,12 +109,16 @@ class CarParameterListViewModel(
         }
     }
 
+    private fun updateListCopy(newList: MutableList<*>?) {
+        _listOptionsCopy.postValue(newList)
+    }
+
     private fun filteredList(query: String) {
         val queryCopy = query.toLowerCase(Locale.getDefault())
         var newList: MutableList<*>?
         newList = _listOptions.value?.toMutableList()
         if (queryCopy.isNotEmpty()) {
-            when (carOptionsCar) {
+            when (codeOptionsCar) {
                 CodeOptionsCar.MARK -> {
                     newList = newList?.filter {
                         (it as CarMark).name?.toLowerCase(Locale.getDefault())
@@ -135,11 +140,6 @@ class CarParameterListViewModel(
             }
         }
         updateListCopy(newList)
-    }
-
-
-    private fun updateListCopy(newList: MutableList<*>?) {
-        _listOptionsCopy.postValue(newList)
     }
 
     fun updateConfiguration(typeOption: CodeOptionsCar, item: OptionsModel) {

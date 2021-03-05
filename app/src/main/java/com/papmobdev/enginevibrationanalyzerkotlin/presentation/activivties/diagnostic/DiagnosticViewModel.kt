@@ -1,10 +1,6 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.StatesDiagnostic
 import kotlinx.coroutines.Dispatchers
@@ -33,10 +29,10 @@ class DiagnosticViewModel(
 
     var job: Job = Job()
 
-    val _stateView = MutableLiveData<StatesViewDiagnostic>()
+    private val _stateView = MutableLiveData(StatesViewDiagnostic.DEFAULT)
     val stateView: LiveData<StatesViewDiagnostic> = _stateView
 
-    private val _progress = MutableLiveData<Int>()
+    private val _progress = MutableLiveData(0)
     val progress: LiveData<Int> = _progress
 
     private val _titleNotify = MutableLiveData<String>()
@@ -44,12 +40,6 @@ class DiagnosticViewModel(
 
     private val _textControlDiagnosticButton = MutableLiveData<String>()
     val textControlDiagnosticButton: LiveData<String> = _textControlDiagnosticButton
-
-    override fun onCleared() {
-        Log.e("CLEARED", "CLEARED")
-        super.onCleared()
-
-    }
 
     fun startDiagnostic() {
         job = viewModelScope.launch(Dispatchers.IO) {
@@ -67,6 +57,7 @@ class DiagnosticViewModel(
     fun applyDefault() {
         _titleNotify.postValue("Проведение диагностики")
         _textControlDiagnosticButton.postValue("Старт")
+        _progress.postValue(0)
         job.cancel()
     }
 

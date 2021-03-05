@@ -36,7 +36,7 @@
             android:layout_marginHorizontal="24dp"
             android:indeterminate="false"
             android:max="1000"
-            android:progress="@{viewModel.progress}"
+            android:progress="0"
             android:progressDrawable="@drawable/custom_progressbar"
             android:textSize="40sp"
             app:layout_constraintBottom_toTopOf="@id/controlTest"

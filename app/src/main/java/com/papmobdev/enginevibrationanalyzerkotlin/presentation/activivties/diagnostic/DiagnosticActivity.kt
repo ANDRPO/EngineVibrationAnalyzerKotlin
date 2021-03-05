@@ -3,9 +3,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.dia
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.asLiveData
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityDiagnosticBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.base.BaseActivity
@@ -24,30 +22,24 @@ class DiagnosticActivity : BaseActivity() {
     }
 
     private val viewModel: DiagnosticViewModel by viewModel()
+
     private lateinit var binding: ActivityDiagnosticBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding =
             binding<ActivityDiagnosticBinding>(R.layout.activity_diagnostic).value.apply {
                 lifecycleOwner = this@DiagnosticActivity
-                if (viewModel == null)
-                    viewModel = this@DiagnosticActivity.viewModel
+                viewModel = this@DiagnosticActivity.viewModel
             }
 
         initClickListeners()
         initObserve()
-        if (viewModel.stateView.value == null) {
-            Log.e("STATEVIEWMODEL", viewModel.stateView.value.toString())
-            viewModel._stateView.value = StatesViewDiagnostic.DEFAULT
-        }
     }
 
     private fun initObserve() {
         viewModel.apply {
             stateView.observe(this@DiagnosticActivity, {
-                Log.e("STATEINITOBSERVE", it.toString())
                 when (it?.let { return@let it } ?: StatesViewDiagnostic.DEFAULT) {
                     StatesViewDiagnostic.DEFAULT -> applyDefault()
                     StatesViewDiagnostic.SUCCESS -> applySuccess()
@@ -55,6 +47,9 @@ class DiagnosticActivity : BaseActivity() {
                     StatesViewDiagnostic.START -> applyStart()
                     StatesViewDiagnostic.CANCEL -> applyCancel()
                 }
+            })
+            progress.observe(this@DiagnosticActivity, {
+                binding.progressDiagnostic.progress = it
             })
         }
     }
