@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flowOn
 class InteractorSensorImpl(
     private val sensorDataSource: SensorDataSource
 ) : InteractorSensor {
-    override fun streamEvent(): Flow<EventModel> = sensorDataSource.getStreamEvents().flowOn(Dispatchers.Default)
+    override fun streamEvent(): Flow<EventModel> = sensorDataSource.getStreamEvents().flowOn(Dispatchers.IO)
 
     override fun startSensor() = sensorDataSource.startSensor()
 

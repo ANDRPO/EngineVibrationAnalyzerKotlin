@@ -104,7 +104,7 @@ class CarParameterListViewModel(
     }
 
     private fun updateList(query: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             filteredList(query)
         }
     }
