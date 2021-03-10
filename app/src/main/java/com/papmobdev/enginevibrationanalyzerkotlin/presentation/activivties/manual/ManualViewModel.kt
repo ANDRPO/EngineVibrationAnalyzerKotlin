@@ -9,8 +9,5 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class ManualViewModel(
     private val observeConfigurationCarUseCase: ObserveConfigurationCarUseCase
 ) : ViewModel() {
-    var checkNotShowActivity: Boolean = false
-
     fun configuration() = observeConfigurationCarUseCase().asLiveData()
-
 }
