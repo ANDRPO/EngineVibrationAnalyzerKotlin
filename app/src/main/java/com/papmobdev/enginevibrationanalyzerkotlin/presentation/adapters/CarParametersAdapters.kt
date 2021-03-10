@@ -8,7 +8,7 @@ import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ItemParamCarBindi
 
 class CarParametersAdapters(
     private val onItemClickListener: OnItemClickListener
-) : ListAdapter<OptionsModel, CarParametersAdapters.ViewHolder>(SearchFilterDiffUtils()) {
+) : ListAdapter<ParametersModel, CarParametersAdapters.ViewHolder>(SearchFilterDiffUtils()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,7 +25,7 @@ class CarParametersAdapters(
 
     inner class ViewHolder(private val binding: ItemParamCarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: OptionsModel) {
+        fun bind(item: ParametersModel) {
             binding.apply {
                 id = item.id
                 name = item.name

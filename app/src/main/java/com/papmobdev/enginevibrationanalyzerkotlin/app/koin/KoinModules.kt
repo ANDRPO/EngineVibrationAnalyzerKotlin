@@ -26,8 +26,6 @@ import com.papmobdev.domain.diagnostic.DiagnosticDataSource
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnosticImpl
 import com.papmobdev.domain.sensor.SensorDataSource
-import com.papmobdev.domain.sensor.interactor.InteractorSensor
-import com.papmobdev.domain.sensor.interactor.InteractorSensorImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.loadKoinModules
@@ -96,11 +94,6 @@ object KoinModules {
     }
 
     private val interactorsModule = module {
-        factory<InteractorSensor> {
-            InteractorSensorImpl(
-                get()
-            )
-        }
         factory<InteractorDiagnostic> {
             InteractorDiagnosticImpl(
                 get(), get(), get()

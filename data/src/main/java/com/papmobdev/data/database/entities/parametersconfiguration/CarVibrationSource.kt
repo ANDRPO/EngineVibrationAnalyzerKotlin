@@ -1,4 +1,4 @@
-package com.papmobdev.data.database.entities.options
+package com.papmobdev.data.database.entities.parametersconfiguration
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

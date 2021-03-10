@@ -1,7 +1,7 @@
 package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.selectconfigurationcar
 
 import androidx.lifecycle.*
-import com.papmobdev.domain.cars.CodeOptionsCar
+import com.papmobdev.domain.cars.CodeParametersCar
 import com.papmobdev.domain.cars.models.CarConfiguration
 import com.papmobdev.domain.cars.models.TypeFuel
 import com.papmobdev.domain.cars.models.VibrationSource
@@ -40,24 +40,24 @@ class SelectCarViewModel(
 
     var nextGenerationIsNotNull: Boolean = true
 
-    fun checkNextOptionsListIsNotNull(carOption: CodeOptionsCar) {
+    fun checkNextOptionsListIsNotNull(carOption: CodeParametersCar) {
         viewModelScope.launch(Dispatchers.IO) {
             when (carOption) {
-                CodeOptionsCar.MARK -> liveDataConfiguration.value.let { lastConfiguration ->
+                CodeParametersCar.MARK -> liveDataConfiguration.value.let { lastConfiguration ->
                     lastConfiguration?.getOrNull()?.fkCarMark?.let { fkMark ->
                         getModelsUseCase(fkMark).collect {
                             nextModelIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
                         }
                     }
                 }
-                CodeOptionsCar.MODEL -> liveDataConfiguration.value.let { lastConfiguration ->
+                CodeParametersCar.MODEL -> liveDataConfiguration.value.let { lastConfiguration ->
                     lastConfiguration?.getOrNull()?.fkCarModel?.let { fkModel ->
                         getGenerationsUseCase(fkModel).collect {
                             nextGenerationIsNotNull = it.getOrDefault(listOf()).isNotEmpty()
                         }
                     }
                 }
-                CodeOptionsCar.GENERATION -> return@launch
+                CodeParametersCar.GENERATION -> return@launch
             }
         }
     }

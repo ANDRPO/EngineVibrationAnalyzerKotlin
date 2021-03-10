@@ -2,7 +2,7 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.sel
 
 import androidx.databinding.adapters.TextViewBindingAdapter
 import androidx.lifecycle.*
-import com.papmobdev.domain.cars.CodeOptionsCar
+import com.papmobdev.domain.cars.CodeParametersCar
 import com.papmobdev.domain.cars.models.CarGeneration
 import com.papmobdev.domain.cars.models.CarMark
 import com.papmobdev.domain.cars.models.CarModel
@@ -12,7 +12,7 @@ import com.papmobdev.domain.cars.usecasecarmarks.GetMarksUseCase
 import com.papmobdev.domain.cars.usecasecarmodels.GetModelsUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.ObserveConfigurationCarUseCase
 import com.papmobdev.domain.cars.usecaseslastconfigurationcar.UpdateConfigurationCarUseCase
-import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.OptionsModel
+import com.papmobdev.enginevibrationanalyzerkotlin.presentation.adapters.ParametersModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -28,17 +28,17 @@ class CarParameterListViewModel(
     private val updateConfigurationCarUseCase: UpdateConfigurationCarUseCase
 ) : ViewModel(), TextViewBindingAdapter.OnTextChanged {
 
-    private val _listOptions: MutableLiveData<MutableList<*>?> = MutableLiveData()
-    val listOptions: LiveData<MutableList<OptionsModel>?> = _listOptions.map {
-        it?.convertCarsOptionsToAdapter()
+    private val _listParameters: MutableLiveData<MutableList<*>?> = MutableLiveData()
+    val listParameters: LiveData<MutableList<ParametersModel>?> = _listParameters.map {
+        it?.convertCarsParametersToAdapter()
     }
 
-    private val _listOptionsCopy: MutableLiveData<MutableList<*>?> = MutableLiveData()
-    val listOptionsCopy: LiveData<MutableList<OptionsModel>?> = _listOptionsCopy.map {
-        it?.convertCarsOptionsToAdapter()
+    private val _listParametersCopy: MutableLiveData<MutableList<*>?> = MutableLiveData()
+    val listParametersCopy: LiveData<MutableList<ParametersModel>?> = _listParametersCopy.map {
+        it?.convertCarsParametersToAdapter()
     }
 
-    lateinit var codeOptionsCar: CodeOptionsCar
+    lateinit var codeParametersCar: CodeParametersCar
 
     private lateinit var carConfiguration: CarConfiguration
 
@@ -58,49 +58,49 @@ class CarParameterListViewModel(
         observeConfigurationCarUseCase().asLiveData()
 
     fun fetchData() {
-        if (listOptions.value != null) return
+        if (listParameters.value != null) return
 
         viewModelScope.launch(Dispatchers.IO) {
             getLastConfiguration().asFlow().collect { result ->
                 result.onSuccess {
                     carConfiguration = it
-                    getList(codeOptionsCar)
+                    getList(codeParametersCar)
                 }
             }
         }
     }
 
-    private suspend fun getList(typeOption: CodeOptionsCar) {
+    private suspend fun getList(typeOption: CodeParametersCar) {
         when (typeOption) {
-            CodeOptionsCar.MARK -> getMarks().asFlow().collect { result ->
+            CodeParametersCar.MARK -> getMarks().asFlow().collect { result ->
                 result.onSuccess {
-                    initListsOptions(it)
+                    initListsParameters(it)
                 }
             }
 
-            CodeOptionsCar.MODEL -> carConfiguration.fkCarMark?.let { id ->
+            CodeParametersCar.MODEL -> carConfiguration.fkCarMark?.let { id ->
                 getModels(id).asFlow()
                     .collect { result ->
                         result.onSuccess {
-                            initListsOptions(it)
+                            initListsParameters(it)
                         }
                     }
             }
 
-            CodeOptionsCar.GENERATION -> carConfiguration.fkCarModel?.let { id ->
+            CodeParametersCar.GENERATION -> carConfiguration.fkCarModel?.let { id ->
                 getGenerations(id).asFlow()
                     .collect { result ->
                         result.onSuccess {
-                            initListsOptions(it)
+                            initListsParameters(it)
                         }
                     }
             }
         }
     }
 
-    private fun initListsOptions(it: List<*>?) {
-        _listOptions.postValue(it?.toMutableList())
-        _listOptionsCopy.postValue(it?.toMutableList())
+    private fun initListsParameters(it: List<*>?) {
+        _listParameters.postValue(it?.toMutableList())
+        _listParametersCopy.postValue(it?.toMutableList())
     }
 
     private fun updateList(query: String) {
@@ -110,28 +110,28 @@ class CarParameterListViewModel(
     }
 
     private fun updateListCopy(newList: MutableList<*>?) {
-        _listOptionsCopy.postValue(newList)
+        _listParametersCopy.postValue(newList)
     }
 
     private fun filteredList(query: String) {
         val queryCopy = query.toLowerCase(Locale.getDefault())
         var newList: MutableList<*>?
-        newList = _listOptions.value?.toMutableList()
+        newList = _listParameters.value?.toMutableList()
         if (queryCopy.isNotEmpty()) {
-            when (codeOptionsCar) {
-                CodeOptionsCar.MARK -> {
+            when (codeParametersCar) {
+                CodeParametersCar.MARK -> {
                     newList = newList?.filter {
                         (it as CarMark).name?.toLowerCase(Locale.getDefault())
                             ?.contains(queryCopy) == true
                     }?.toMutableList()
                 }
-                CodeOptionsCar.MODEL -> {
+                CodeParametersCar.MODEL -> {
                     newList = newList?.filter {
                         (it as CarModel).name?.toLowerCase(Locale.getDefault())
                             ?.contains(queryCopy) == true
                     }?.toMutableList()
                 }
-                CodeOptionsCar.GENERATION -> {
+                CodeParametersCar.GENERATION -> {
                     newList = newList?.filter {
                         (it as CarGeneration).name?.toLowerCase(Locale.getDefault())
                             ?.contains(queryCopy) == true
@@ -142,18 +142,18 @@ class CarParameterListViewModel(
         updateListCopy(newList)
     }
 
-    fun updateConfiguration(typeOption: CodeOptionsCar, item: OptionsModel) {
+    fun updateConfiguration(typeOption: CodeParametersCar, item: ParametersModel) {
         viewModelScope.launch(Dispatchers.IO) {
             var newCarConfiguration: CarConfiguration? = null
             when (typeOption) {
-                CodeOptionsCar.MARK -> {
+                CodeParametersCar.MARK -> {
                     if (carConfiguration.fkCarMark != item.id)
                         newCarConfiguration = CarConfiguration(
                             fkCarMark = item.id,
                             nameMark = item.name
                         )
                 }
-                CodeOptionsCar.MODEL -> {
+                CodeParametersCar.MODEL -> {
                     if (carConfiguration.fkCarModel != item.id)
                         newCarConfiguration = CarConfiguration(
                             fkCarMark = carConfiguration.fkCarMark,
@@ -162,7 +162,7 @@ class CarParameterListViewModel(
                             nameModel = item.name
                         )
                 }
-                CodeOptionsCar.GENERATION -> {
+                CodeParametersCar.GENERATION -> {
                     if (carConfiguration.fkCarGeneration != item.id)
                         newCarConfiguration = CarConfiguration(
                             fkCarMark = carConfiguration.fkCarMark,
@@ -193,12 +193,12 @@ class CarParameterListViewModel(
         updateList(s.toString())
     }
 
-    private fun <T> MutableList<T>.convertCarsOptionsToAdapter(): MutableList<OptionsModel> {
+    private fun <T> MutableList<T>.convertCarsParametersToAdapter(): MutableList<ParametersModel> {
         return this.map {
             when (it) {
-                is CarMark -> OptionsModel(it.id, it.name)
-                is CarModel -> OptionsModel(it.id, it.name)
-                is CarGeneration -> OptionsModel(it.id, it.name)
+                is CarMark -> ParametersModel(it.id, it.name)
+                is CarModel -> ParametersModel(it.id, it.name)
+                is CarGeneration -> ParametersModel(it.id, it.name)
                 else -> throw Exception("Type not defined")
             }
         }.toMutableList()

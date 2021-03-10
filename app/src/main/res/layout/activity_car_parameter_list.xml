@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/notifyEmptyListOptions"
+            android:id="@+id/notify_empty_list_parameters"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/marginHorizontalActivitySelectCarsOptions"

@@ -1,7 +1,7 @@
 package com.papmobdev.data.database
 
 import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
-import com.papmobdev.data.database.entities.options.*
+import com.papmobdev.data.database.entities.parametersconfiguration.*
 import com.papmobdev.domain.cars.CarsDataSource
 import com.papmobdev.domain.cars.models.*
 import kotlinx.coroutines.Dispatchers

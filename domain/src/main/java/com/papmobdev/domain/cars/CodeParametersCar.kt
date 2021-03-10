@@ -1,6 +1,6 @@
 package com.papmobdev.domain.cars
 
-enum class CodeOptionsCar {
+enum class CodeParametersCar {
     MARK,
     MODEL,
     GENERATION

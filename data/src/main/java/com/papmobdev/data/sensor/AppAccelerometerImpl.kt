@@ -14,25 +14,23 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
     private val accelerometer =
         sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) as Sensor
 
-    private lateinit var flow: Flow<SensorEvent>
-    private lateinit var listener: SensorEventListener
+    private val _events = MutableSharedFlow<SensorEvent>(
+        replay = 0,
+        extraBufferCapacity = 2_000,
+        onBufferOverflow = BufferOverflow.SUSPEND
+    )
+    private val events: SharedFlow<SensorEvent> = _events.asSharedFlow()
 
-    private fun <T> Channel<T>.asFlow() =
-        this.receiveAsFlow().buffer(capacity = Channel.RENDEZVOUS)
+    private val listener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            event?.let { _events.tryEmit(it) }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        }
+    }
 
     override fun start() {
-        flow = flow {
-            
-        }
-        listener = object :SensorEventListener{
-            override fun onSensorChanged(event: SensorEvent?) {
-
-            }
-
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            }
-        }
-
         sensorManager.registerListener(
             listener,
             accelerometer,
@@ -41,7 +39,7 @@ class AppAccelerometerImpl(context: Context) : AppAccelerometer {
     }
 
     @ExperimentalCoroutinesApi
-    override fun streamEvents(): Flow<SensorEvent> = flow
+    override fun streamEvents(): Flow<SensorEvent> = events
 
     override fun stop() {
         sensorManager.unregisterListener(listener, accelerometer)

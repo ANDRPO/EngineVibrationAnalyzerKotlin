@@ -5,10 +5,7 @@ import com.papmobdev.domain.sensor.SensorDataSource
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 class SensorDataSourceImpl(
     private val appAccelerometer: AppAccelerometer
@@ -17,7 +14,9 @@ class SensorDataSourceImpl(
 
     override fun getStreamEvents(): Flow<EventModel> = appAccelerometer.streamEvents().map {
         it.toDomain()
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO).distinctUntilChanged { old, new ->
+        old.timestamp == new.timestamp
+    }
 
     override fun stopSensor() = appAccelerometer.stop()
 }

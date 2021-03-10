@@ -20,8 +20,6 @@ class DiagnosticActivity : BaseActivity() {
             val intent = Intent(context, DiagnosticActivity::class.java)
             context.startActivity(intent)
         }
-
-        val list: List<SensorEvent> = mutableListOf()
     }
 
     private val viewModel: DiagnosticViewModel by viewModel()
@@ -65,7 +63,7 @@ class DiagnosticActivity : BaseActivity() {
                     StatesViewDiagnostic.ERROR -> viewModel.startDiagnostic()
                     StatesViewDiagnostic.CANCEL -> viewModel.startDiagnostic()
                     StatesViewDiagnostic.START -> viewModel.stopDiagnostic()
-                    StatesViewDiagnostic.SUCCESS -> viewModel.startDiagnostic()
+                    StatesViewDiagnostic.SUCCESS -> showMessage("Окно в разработке")
                 }
             }
         }

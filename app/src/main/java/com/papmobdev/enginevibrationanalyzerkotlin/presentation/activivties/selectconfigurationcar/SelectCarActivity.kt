@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
-import com.papmobdev.domain.cars.CodeOptionsCar
+import com.papmobdev.domain.cars.CodeParametersCar
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCarBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual.ManualActivity
@@ -74,9 +74,9 @@ class SelectCarActivity : BaseActivity() {
                 }
 
                 if (it.getOrNull()?.fkCarModel == null) {
-                    checkNextOptionsListIsNotNull(CodeOptionsCar.MARK)
+                    checkNextOptionsListIsNotNull(CodeParametersCar.MARK)
                 } else if (it.getOrNull()?.fkCarGeneration == null) {
-                    checkNextOptionsListIsNotNull(CodeOptionsCar.MODEL)
+                    checkNextOptionsListIsNotNull(CodeParametersCar.MODEL)
                 }
             })
 
@@ -109,7 +109,7 @@ class SelectCarActivity : BaseActivity() {
 
                 }
                 result.onFailure {
-                    showToastMissingFollowingListOptions("Не удалось загрузить список типов топлива")
+                    showToastMissingFollowingListParameters("Не удалось загрузить список типов топлива")
                 }
             }
             )
@@ -142,12 +142,12 @@ class SelectCarActivity : BaseActivity() {
                     }
                 }
                 result.onFailure {
-                    showToastMissingFollowingListOptions("Не удалось загрузить список источников вибрации")
+                    showToastMissingFollowingListParameters("Не удалось загрузить список источников вибрации")
                 }
             })
 
             showErrorMessage.observe(this@SelectCarActivity, {
-                showToastMissingFollowingListOptions(it)
+                showToastMissingFollowingListParameters(it)
             })
         }
     }
@@ -160,16 +160,16 @@ class SelectCarActivity : BaseActivity() {
 
     private fun initClickListeners() {
         binding.selectMarkCar.setOnClickListener {
-            openCarParameterList(CodeOptionsCar.MARK)
+            openCarParameterList(CodeParametersCar.MARK)
         }
         binding.selectModelCar.setOnClickListener {
             if (modelCheckSelection()) {
-                openCarParameterList(CodeOptionsCar.MODEL)
+                openCarParameterList(CodeParametersCar.MODEL)
             }
         }
         binding.selectGenerationCar.setOnClickListener {
             if (generationCheckSelection()) {
-                openCarParameterList(CodeOptionsCar.GENERATION)
+                openCarParameterList(CodeParametersCar.GENERATION)
             }
         }
         binding.buttonNext.setOnClickListener {
@@ -181,8 +181,8 @@ class SelectCarActivity : BaseActivity() {
     private fun modelCheckSelection(): Boolean {
         when {
             binding.configuration?.fkCarMark == null
-            -> showToastMissingFollowingListOptions("Не выбрана марка")
-            !viewModel.nextModelIsNotNull -> showToastMissingFollowingListOptions("Список моделей для данной марки отсутствует")
+            -> showToastMissingFollowingListParameters("Не выбрана марка")
+            !viewModel.nextModelIsNotNull -> showToastMissingFollowingListParameters("Список моделей для данной марки отсутствует")
             else -> return true
         }
         return false
@@ -190,8 +190,8 @@ class SelectCarActivity : BaseActivity() {
 
     private fun generationCheckSelection(): Boolean {
         when {
-            binding.configuration?.fkCarModel == null -> showToastMissingFollowingListOptions("Не выбрана модель")
-            !viewModel.nextGenerationIsNotNull -> showToastMissingFollowingListOptions("Список поколений для данной модели отсутствует")
+            binding.configuration?.fkCarModel == null -> showToastMissingFollowingListParameters("Не выбрана модель")
+            !viewModel.nextGenerationIsNotNull -> showToastMissingFollowingListParameters("Список поколений для данной модели отсутствует")
             else -> return true
         }
         return false
@@ -202,11 +202,11 @@ class SelectCarActivity : BaseActivity() {
         binding.root.requestFocus()
     }
 
-    private fun openCarParameterList(typeOptionCars: CodeOptionsCar) {
+    private fun openCarParameterList(typeOptionCars: CodeParametersCar) {
         CarParameterListActivity.start(this, typeOptionCars)
     }
 
-    private fun showToastMissingFollowingListOptions(message: String) {
+    private fun showToastMissingFollowingListParameters(message: String) {
         Toast.makeText(this@SelectCarActivity, message, Toast.LENGTH_SHORT).show()
     }
 }

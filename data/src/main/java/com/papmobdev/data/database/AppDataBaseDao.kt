@@ -4,7 +4,7 @@ import androidx.room.*
 import com.papmobdev.data.database.entities.diagnostic.DiagnosticsEntity
 import com.papmobdev.data.database.entities.diagnostic.LastCarConfigurationEntity
 import com.papmobdev.data.database.entities.diagnostic.SensorEventEntity
-import com.papmobdev.data.database.entities.options.*
+import com.papmobdev.data.database.entities.parametersconfiguration.*
 import com.papmobdev.domain.sensor.models.EventModel
 import kotlinx.coroutines.flow.Flow
 
