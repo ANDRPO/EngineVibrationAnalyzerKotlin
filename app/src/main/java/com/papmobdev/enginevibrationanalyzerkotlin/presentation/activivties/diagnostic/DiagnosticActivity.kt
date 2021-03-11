@@ -2,7 +2,6 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.dia
 
 import android.content.Context
 import android.content.Intent
-import android.hardware.SensorEvent
 import android.os.Bundle
 import android.widget.Toast
 import com.papmobdev.enginevibrationanalyzerkotlin.R
