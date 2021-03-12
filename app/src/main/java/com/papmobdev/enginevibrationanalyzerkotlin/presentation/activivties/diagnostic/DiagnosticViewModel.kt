@@ -3,11 +3,9 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.dia
 import androidx.lifecycle.*
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.InteractorDiagnostic
 import com.papmobdev.domain.diagnostic.diagnosticinteractor.StatesDiagnostic
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 @ExperimentalCoroutinesApi
 class DiagnosticViewModel(
@@ -27,7 +25,7 @@ class DiagnosticViewModel(
         }
     }
 
-    var job: Job = Job()
+    private var job: Job = Job()
 
     private val _stateView = MutableLiveData(StatesViewDiagnostic.DEFAULT)
     val stateView: LiveData<StatesViewDiagnostic> = _stateView
@@ -42,9 +40,10 @@ class DiagnosticViewModel(
     val textControlDiagnosticButton: LiveData<String> = _textControlDiagnosticButton
 
     fun startDiagnostic() {
-        job = viewModelScope.launch(Dispatchers.IO) {
+        job.cancel()
+        job = (viewModelScope.launch(Dispatchers.IO) {
             interactorDiagnostic.startDiagnostic()
-        }
+        })
     }
 
     fun stopDiagnostic() {

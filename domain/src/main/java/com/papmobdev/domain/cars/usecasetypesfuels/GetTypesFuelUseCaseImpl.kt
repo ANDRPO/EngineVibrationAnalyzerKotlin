@@ -1,7 +1,6 @@
 package com.papmobdev.domain.cars.usecasetypesfuels
 
 import com.papmobdev.domain.cars.CarsDataSource
-import com.papmobdev.domain.cars.models.TypeFuel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -20,6 +20,12 @@ class InteractorDiagnosticImpl(
     private val carsDataSource: CarsDataSource
 ) : InteractorDiagnostic {
 
+    companion object {
+        private const val DIAGNOSTIC_TIME = 10_000
+        private const val PRE_DIAGNOSTIC_TIME = 3_000
+        private const val PROGRESS_BAR_PERCENTAGE = 1_000
+    }
+
     private val listEvents: MutableList<EventModel> = mutableListOf()
 
     private val _progress = MutableSharedFlow<Int>()
@@ -74,11 +80,12 @@ class InteractorDiagnosticImpl(
         var readEventsIsActive = false
         val time = System.currentTimeMillis()
 
-        while (System.currentTimeMillis() - time < 10000) {
+        while (System.currentTimeMillis() - time < DIAGNOSTIC_TIME) {
 
-            _progress.emit((System.currentTimeMillis() - time).toInt() / 10)
+            val progress : Int = ((System.currentTimeMillis() - time) * PROGRESS_BAR_PERCENTAGE / DIAGNOSTIC_TIME).toInt()
+            _progress.emit(progress)
 
-            if (System.currentTimeMillis() - time > 3000 && !readEventsIsActive) {
+            if (System.currentTimeMillis() - time > PRE_DIAGNOSTIC_TIME && !readEventsIsActive) {
                 readEventsIsActive = true
                 CoroutineScope(currentCoroutineContext()).launch {
                     readEvents()
@@ -106,9 +113,9 @@ class InteractorDiagnosticImpl(
         fkCarMark = fkCarMark,
         fkCarModel = fkCarModel,
         fkCarGeneration = fkCarGeneration,
-        fkTypeFuel = fkTypeFuel,
+        fkTypeFuel = typeFuel?.idType,
         engineVolume = engineVolume,
-        fkVibrationSource = fkTypeSource,
+        fkVibrationSource = typeSource?.idType,
         note = note
     )
 }

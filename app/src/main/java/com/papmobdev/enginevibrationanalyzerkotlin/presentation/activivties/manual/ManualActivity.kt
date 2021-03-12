@@ -3,6 +3,8 @@ package com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.man
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.papmobdev.domain.cars.models.TypesFuel
+import com.papmobdev.domain.cars.models.TypesSource
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivityManualBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.diagnostic.DiagnosticActivity
@@ -21,6 +23,8 @@ class ManualActivity : BaseActivity() {
             val intent = Intent(context, ManualActivity::class.java)
             context.startActivity(intent)
         }
+
+        private const val DEFAULT_TYPE_SOURCE = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +42,11 @@ class ManualActivity : BaseActivity() {
         viewModel.configuration().observe(this, { result ->
             result.onSuccess {
                 binding.imageManual.setImageResource(
-                    when (it.fkTypeSource) {
-                        1 -> R.drawable.image_panel_vector_device
-                        2 -> R.drawable.image_engine_vector_device
-                        3 -> R.drawable.image_stwheel_vector_device
-                        else -> R.drawable.image_engine_vector_device
+                    when (it.fkTypeSource ?: DEFAULT_TYPE_SOURCE) {
+                        TypesSource.FRONT_PANEL.idType -> R.drawable.image_panel_vector_device
+                        TypesSource.ENGINE.idType -> R.drawable.image_engine_vector_device
+                        TypesSource.WHEEL.idType -> R.drawable.image_stwheel_vector_device
+                        else -> R.drawable.image_panel_vector_device
                     }
                 )
             }

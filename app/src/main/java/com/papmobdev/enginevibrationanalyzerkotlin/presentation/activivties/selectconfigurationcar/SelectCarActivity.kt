@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.papmobdev.domain.cars.CodeParametersCar
+import com.papmobdev.domain.cars.models.TypesFuel
+import com.papmobdev.domain.cars.models.TypesSource
 import com.papmobdev.enginevibrationanalyzerkotlin.R
 import com.papmobdev.enginevibrationanalyzerkotlin.databinding.ActivitySelectCarBinding
 import com.papmobdev.enginevibrationanalyzerkotlin.presentation.activivties.manual.ManualActivity
@@ -23,6 +25,10 @@ import ru.tinkoff.decoro.watchers.MaskFormatWatcher
 
 @ExperimentalCoroutinesApi
 class SelectCarActivity : BaseActivity() {
+
+    private val DEFAULT_TYPE_SOURCE = TypesSource.FRONT_PANEL
+    private val DEFAULT_TYPE_FUEL = TypesFuel.PETROL
+
     private val viewModel: SelectCarViewModel by viewModel()
     private lateinit var binding: ActivitySelectCarBinding
 
@@ -85,7 +91,7 @@ class SelectCarActivity : BaseActivity() {
                     val adapter = ArrayAdapter(
                         this@SelectCarActivity,
                         R.layout.spinner_item,
-                        list.map { it.nameFuel }
+                        list
                     )
 
                     binding.spinnerDieselOrPetrol.apply {
@@ -99,7 +105,7 @@ class SelectCarActivity : BaseActivity() {
                                     id: Long
                                 ) {
                                     viewModel.updateTypeFuelConfiguration(
-                                        list[position].idFuel ?: 1
+                                        list[position].idFuel ?: DEFAULT_TYPE_FUEL.idType
                                     )
                                 }
 
@@ -119,7 +125,7 @@ class SelectCarActivity : BaseActivity() {
                     val adapter = ArrayAdapter(
                         this@SelectCarActivity,
                         R.layout.spinner_item,
-                        list.map { it.nameSource }
+                        list
                     )
 
                     binding.spinnerSourceVibration.apply {
@@ -133,7 +139,7 @@ class SelectCarActivity : BaseActivity() {
                                     id: Long
                                 ) {
                                     viewModel.updateVibrationSourceConfiguration(
-                                        list[position].idSource ?: 1
+                                        list[position].ordinal ?: 1
                                     )
                                 }
 

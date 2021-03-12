@@ -22,14 +22,6 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
         it.toDomain()
     }
 
-    override fun getVibrationSource(): List<VibrationSource> = dao.getTypesVibrationSource().map {
-        it.toDomain()
-    }
-
-    override fun getTypesFuel(): List<TypeFuel> = dao.getTypesFuel().map {
-        it.toDomain()
-    }
-
     override fun getLastCarConfiguration(): Flow<CarConfiguration> =
         dao.getLastConfiguration().map {
             it.toDomain()
@@ -42,10 +34,10 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
             fkCarMark = newConfiguration.fkCarMark,
             fkCarModel = newConfiguration.fkCarModel,
             fkCarGeneration = newConfiguration.fkCarGeneration,
-            fkTypeFuel = newConfiguration.fkTypeFuel,
+            fkTypeFuel = newConfiguration.typeFuel?.idType,
             engineVolume = newConfiguration.engineVolume,
             note = newConfiguration.note,
-            fkVibrationSource = newConfiguration.fkTypeSource
+            fkVibrationSource = newConfiguration.typeSource?.idType
         )
         return try {
             dao.updateLastConfiguration(pushConfiguration)
@@ -67,12 +59,15 @@ class CarsDataSourceImpl(private val dao: AppDataBaseDao) : CarsDataSource {
                 nameModel = fkCarModel.let { dao.getOneCarModel(fkCarModel)?.carModelName },
                 fkCarGeneration = fkCarGeneration,
                 nameGeneration = fkCarGeneration.let { dao.getOneCarGeneration(fkCarGeneration)?.carGenerationName },
-                fkTypeFuel = fkTypeFuel,
+                typeFuel = fkTypeFuel?.let { TypesFuel.getTypesSourceById(it) },
                 engineVolume = engineVolume,
                 note = note,
-                fkTypeSource = fkVibrationSource
+                typeSource = fkVibrationSource?.let { TypesSource.getTypesSourceById(it) }
             )
         }
+
+    private fun CarVibrationSource.toData(): TypesSource =
+        TypesSource.getTypesSourceById(this.idSource)
 
     private fun CarMarkEntity.toDomain() = CarMark(
         id = this.idCarMark,

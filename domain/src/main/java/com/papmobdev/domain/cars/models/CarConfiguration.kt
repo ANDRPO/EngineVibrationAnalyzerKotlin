@@ -7,8 +7,8 @@ data class CarConfiguration(
     val nameModel: String? = null,
     val fkCarGeneration: Int? = null,
     val nameGeneration: String? = null,
-    var fkTypeFuel: Int? = 1,
-    var fkTypeSource: Int? = 1,
+    var typeFuel: TypesFuel? = null,
+    var typeSource: TypesSource? = null,
     var engineVolume: Double? = null,
     var note: String? = null
 )
